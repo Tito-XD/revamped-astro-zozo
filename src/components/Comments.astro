@@ -44,24 +44,42 @@
 		});
 	});
 
+	const giscusScriptSelector = 'script[data-giscus-script="true"]';
+
 	// hydrates the comment element
 	const addComments = (document: Document) => {
+		const giscusRoot = document.querySelector<HTMLElement>('.giscus');
 		// if the element is not created by its parent. we do not hydrate
-		if (!document.querySelector('.giscus')) {
+		if (!giscusRoot) {
+			return;
+		}
+		if (
+			giscusRoot.querySelector('iframe.giscus-frame') ||
+			giscusRoot.querySelector(giscusScriptSelector)
+		) {
 			return;
 		}
 		const giscusScript = giscusScriptTemplate.cloneNode(true) as HTMLScriptElement;
 		giscusScript.setAttribute('data-theme', giscusTheme(theme.get()));
-		document.body.appendChild(giscusScript);
+		giscusScript.setAttribute('data-giscus-script', 'true');
+		giscusRoot.appendChild(giscusScript);
 	};
 	addComments(document);
 	// make addComments rerun after view transitions
 	document.addEventListener('astro:after-swap', () => addComments(document));
 
+	const syncThemeWithSystem = () => {
+		addComments(document);
+		sendMessage({
+			setConfig: {
+				theme: giscusTheme(theme.get()),
+			},
+		});
+	};
 	window
 		.matchMedia('(prefers-color-scheme: dark)')
-		.addEventListener('change', (e) => e.matches && addComments(document));
+		.addEventListener('change', syncThemeWithSystem);
 	window
 		.matchMedia('(prefers-color-scheme: light)')
-		.addEventListener('change', (e) => e.matches && addComments(document));
+		.addEventListener('change', syncThemeWithSystem);
 </script>
