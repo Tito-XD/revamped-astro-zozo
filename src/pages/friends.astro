@@ -34,10 +34,6 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 
 <ScaffoldLayout title="Friends" description="友情链接" currentNav="Friends">
 	<h1 class="mb-3 text-5xl font-extrabold">Friends</h1>
-	<p class="text-base text-neutral-500 dark:text-neutral-300">
-		向右滑动浏览卡片。桌面悬浮或触屏点击卡片可展开详细信息。
-	</p>
-
 	{
 		sortedFriends.length > 0 ? (
 			<div class="relative mt-8">

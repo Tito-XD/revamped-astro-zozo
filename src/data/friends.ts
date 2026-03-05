@@ -36,5 +36,11 @@ export const friends: FriendLink[] = [
 		avatar: 'https://frankuwu.link/_astro/profile-picture.B3m_m6U7_gWWnD.webp',
 		bio: '',
 		link: 'https://frankuwu.link/',
+	},
+	{
+		id: '烤鱼',
+		avatar: 'https://blog.grilledfish9.xyz/images/2.PNG',
+		bio: '',
+		link: 'blog.grilledfish9.xyz',
 	}
 ];
