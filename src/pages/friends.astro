@@ -39,7 +39,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 			<div class="relative mt-8">
 				<ul
 					id="friends-track"
-					class="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 pr-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700"
+					class="grid justify-center gap-4 px-2 py-3"
 				>
 					{
 						sortedFriends.map((friend, index) => (
@@ -105,6 +105,8 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 	#friends-track {
 		scroll-behavior: smooth;
 		align-items: stretch;
+		grid-template-columns: minmax(0, 11.5rem);
+		overflow: visible;
 	}
 
 	.friend-card {
@@ -254,14 +256,15 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		word-break: break-all;
 	}
 
+	@media (min-width: 640px) {
+		#friends-track {
+			grid-template-columns: repeat(2, minmax(0, 11.5rem));
+		}
+	}
+
 	@media (min-width: 1024px) {
 		#friends-track {
-			display: grid;
 			grid-template-columns: repeat(3, minmax(0, 11.5rem));
-			justify-content: center;
-			overflow-x: visible;
-			padding-right: 0;
-			scroll-snap-type: none;
 		}
 	}
 </style>
@@ -327,3 +330,4 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		});
 	}
 </script>
+
