@@ -256,17 +256,6 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		word-break: break-all;
 	}
 
-	@media (min-width: 640px) {
-		#friends-track {
-			grid-template-columns: repeat(2, minmax(0, 11.5rem));
-		}
-	}
-
-	@media (min-width: 1024px) {
-		#friends-track {
-			grid-template-columns: repeat(3, minmax(0, 11.5rem));
-		}
-	}
 </style>
 
 <script is:inline type="module">
