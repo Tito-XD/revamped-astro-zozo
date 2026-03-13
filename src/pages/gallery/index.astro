@@ -8,8 +8,17 @@ const categories = galleryCategories.map((category) => {
 		...category,
 		count: items.length,
 		cover: items[0],
+		previews: items.slice(0, 3),
+		highlightCount: items.filter((item) => item.focusCharacters?.length).length,
+		latestYear: items
+			.map((item) => Number(item.year))
+			.filter((year) => Number.isFinite(year))
+			.sort((left, right) => right - left)[0],
 	};
 });
+
+const totalWorks = categories.reduce((total, category) => total + category.count, 0);
+const totalHighlights = categories.reduce((total, category) => total + category.highlightCount, 0);
 ---
 
 <ScaffoldLayout
@@ -21,9 +30,23 @@ const categories = galleryCategories.map((category) => {
 		<p class="gallery-kicker">Gallery</p>
 		<h1>Illustration, Life, View</h1>
 		<p class="gallery-lead">
-			这里先做成一个可继续扩展的预览入口。后面你只需要往数据里补图片、notes 和
-			插图角色信息，就能继续长出新的页面。
+			A quiet preview space for testing the gallery structure, pacing, and character-focus
+			interactions before it gets linked from the main site navigation.
 		</p>
+		<div class="gallery-hero-stats" aria-label="Gallery overview">
+			<div>
+				<strong>{categories.length}</strong>
+				<span>categories</span>
+			</div>
+			<div>
+				<strong>{totalWorks}</strong>
+				<span>works seeded</span>
+			</div>
+			<div>
+				<strong>{totalHighlights}</strong>
+				<span>focus demos</span>
+			</div>
+		</div>
 	</section>
 
 	<section class="gallery-category-grid" aria-label="Gallery categories">
@@ -41,12 +64,36 @@ const categories = galleryCategories.map((category) => {
 								decoding="async"
 							/>
 						)}
+						<div class="gallery-category-overlay">
+							<p>{category.subtitle}</p>
+							<div>
+								<span>{category.count} works</span>
+								{category.highlightCount > 0 && <span>{category.highlightCount} interactive</span>}
+							</div>
+						</div>
 					</div>
 					<div class="gallery-category-copy">
 						<p>{category.subtitle}</p>
 						<h2>{category.title}</h2>
-						<span>{category.count} items</span>
 						<p>{category.description}</p>
+						<div class="gallery-category-preview-strip" aria-hidden="true">
+							{
+								category.previews.map((preview) => (
+									<img
+										src={preview.image.src}
+										width={preview.image.width}
+										height={preview.image.height}
+										alt=""
+										loading="lazy"
+										decoding="async"
+									/>
+								))
+							}
+						</div>
+						<div class="gallery-category-footer">
+							<small>{category.latestYear ? `Latest ${category.latestYear}` : 'Preview ready'}</small>
+							<strong>Open {category.title}</strong>
+						</div>
 					</div>
 				</a>
 			))
@@ -80,6 +127,35 @@ const categories = galleryCategories.map((category) => {
 		font-size: 1rem;
 		line-height: 1.7;
 		color: rgb(82 82 91);
+	}
+
+	.gallery-hero-stats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.8rem;
+		padding-top: 1.25rem;
+	}
+
+	.gallery-hero-stats div {
+		display: grid;
+		gap: 0.15rem;
+		min-width: 8rem;
+		border-radius: 1.15rem;
+		border: 1px solid rgb(228 228 231 / 0.9);
+		background: rgb(255 255 255 / 0.72);
+		padding: 0.85rem 1rem;
+	}
+
+	.gallery-hero-stats strong {
+		font-size: 1.35rem;
+		line-height: 1;
+	}
+
+	.gallery-hero-stats span {
+		font-size: 0.76rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgb(113 113 122);
 	}
 
 	.gallery-category-grid {
@@ -116,16 +192,57 @@ const categories = galleryCategories.map((category) => {
 		height: 100%;
 		width: 100%;
 		object-fit: cover;
+		transition: transform 420ms ease;
+	}
+
+	.gallery-category-card:hover .gallery-category-cover img,
+	.gallery-category-card:focus-visible .gallery-category-cover img {
+		transform: scale(1.04);
+	}
+
+	.gallery-category-overlay {
+		position: absolute;
+		inset: auto 0 0;
+		display: grid;
+		gap: 0.5rem;
+		padding: 1rem;
+		background: linear-gradient(180deg, transparent, rgb(24 24 27 / 0.75));
+		color: rgb(250 250 250);
+	}
+
+	.gallery-category-overlay p,
+	.gallery-category-overlay span {
+		margin: 0;
+	}
+
+	.gallery-category-overlay p {
+		font-size: 0.8rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.gallery-category-overlay div {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+	}
+
+	.gallery-category-overlay span {
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.14);
+		padding: 0.3rem 0.6rem;
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 	}
 
 	.gallery-category-copy {
 		display: grid;
-		gap: 0.45rem;
+		gap: 0.65rem;
 		padding: 1.2rem 1.2rem 1.35rem;
 	}
 
-	.gallery-category-copy p:first-child,
-	.gallery-category-copy span {
+	.gallery-category-copy > p:first-child {
 		margin: 0;
 		font-size: 0.78rem;
 		letter-spacing: 0.1em;
@@ -138,19 +255,59 @@ const categories = galleryCategories.map((category) => {
 		font-size: 1.7rem;
 	}
 
-	.gallery-category-copy p:last-child {
-		margin: 0.15rem 0 0;
+	.gallery-category-copy > p:last-of-type {
+		margin: 0;
 		font-size: 0.96rem;
 		line-height: 1.65;
 		color: rgb(82 82 91);
 	}
 
+	.gallery-category-preview-strip {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.55rem;
+		padding-top: 0.15rem;
+	}
+
+	.gallery-category-preview-strip img {
+		aspect-ratio: 1;
+		width: 100%;
+		border-radius: 0.95rem;
+		object-fit: cover;
+	}
+
+	.gallery-category-footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding-top: 0.25rem;
+	}
+
+	.gallery-category-footer small {
+		font-size: 0.72rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgb(113 113 122);
+	}
+
+	.gallery-category-footer strong {
+		font-size: 0.9rem;
+	}
+
 	:root:is(.dark) .gallery-kicker,
-	:root:is(.dark) .gallery-category-copy p:first-child,
-	:root:is(.dark) .gallery-category-copy span,
+	:root:is(.dark) .gallery-hero-stats span,
+	:root:is(.dark) .gallery-category-copy > p:first-child,
 	:root:is(.dark) .gallery-lead,
-	:root:is(.dark) .gallery-category-copy p:last-child {
+	:root:is(.dark) .gallery-category-copy > p:last-of-type,
+	:root:is(.dark) .gallery-category-footer small {
 		color: rgb(212 212 216);
+	}
+
+	:root:is(.dark) .gallery-hero-stats div {
+		border-color: rgb(82 82 91 / 0.8);
+		background: rgb(39 39 42 / 0.88);
 	}
 
 	:root:is(.dark) .gallery-category-card {
@@ -160,11 +317,17 @@ const categories = galleryCategories.map((category) => {
 
 	@media (prefers-color-scheme: dark) {
 		:root:not(.light) .gallery-kicker,
-		:root:not(.light) .gallery-category-copy p:first-child,
-		:root:not(.light) .gallery-category-copy span,
+		:root:not(.light) .gallery-hero-stats span,
+		:root:not(.light) .gallery-category-copy > p:first-child,
 		:root:not(.light) .gallery-lead,
-		:root:not(.light) .gallery-category-copy p:last-child {
+		:root:not(.light) .gallery-category-copy > p:last-of-type,
+		:root:not(.light) .gallery-category-footer small {
 			color: rgb(212 212 216);
+		}
+
+		:root:not(.light) .gallery-hero-stats div {
+			border-color: rgb(82 82 91 / 0.8);
+			background: rgb(39 39 42 / 0.88);
 		}
 
 		:root:not(.light) .gallery-category-card {

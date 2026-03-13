@@ -49,8 +49,14 @@ const items = getGalleryItemsByCategory(category.slug);
 
 	<section class="gallery-wall" aria-label={`${category.title} wall`}>
 		{
-			items.map((item) => (
-				<a class="gallery-wall-card" href={`/gallery/${category.slug}/${item.slug}/`}>
+			items.map((item, index) => (
+				<a
+					class:list={[
+						'gallery-wall-card',
+						{ featured: index === 0, interactive: Boolean(item.focusCharacters?.length) },
+					]}
+					href={`/gallery/${category.slug}/${item.slug}/`}
+				>
 					<img
 						src={item.image.src}
 						width={item.image.width}
@@ -60,9 +66,16 @@ const items = getGalleryItemsByCategory(category.slug);
 						decoding="async"
 					/>
 					<div class="gallery-wall-card-copy">
-						<p>{item.eyebrow}</p>
+						<div class="gallery-wall-card-meta">
+							<p>{item.eyebrow}</p>
+							{item.focusCharacters?.length && <span>Interactive Focus</span>}
+						</div>
 						<h2>{item.title}</h2>
 						<span>{item.summary}</span>
+						<div class="gallery-wall-card-footer">
+							<small>{item.year ?? category.title}</small>
+							<small>{item.location ?? item.credit ?? 'Open viewer'}</small>
+						</div>
 					</div>
 				</a>
 			))
@@ -153,9 +166,17 @@ const items = getGalleryItemsByCategory(category.slug);
 		object-fit: cover;
 	}
 
+	.gallery-wall-card.featured {
+		grid-column: span 2;
+	}
+
+	.gallery-wall-card.featured img {
+		aspect-ratio: 16 / 10;
+	}
+
 	.gallery-wall-card-copy {
 		display: grid;
-		gap: 0.35rem;
+		gap: 0.45rem;
 		padding: 0.9rem 1rem 1rem;
 	}
 
@@ -165,10 +186,26 @@ const items = getGalleryItemsByCategory(category.slug);
 		color: rgb(113 113 122);
 	}
 
-	.gallery-wall-card-copy p {
+	.gallery-wall-card-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.gallery-wall-card-copy p,
+	.gallery-wall-card-meta span,
+	.gallery-wall-card-footer small {
 		font-size: 0.72rem;
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
+	}
+
+	.gallery-wall-card-meta span {
+		border-radius: 999px;
+		background: rgb(24 24 27 / 0.08);
+		padding: 0.3rem 0.6rem;
+		color: rgb(24 24 27 / 0.72);
 	}
 
 	.gallery-wall-card-copy h2 {
@@ -181,11 +218,34 @@ const items = getGalleryItemsByCategory(category.slug);
 		line-height: 1.55;
 	}
 
+	.gallery-wall-card-footer {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 0.75rem;
+		padding-top: 0.35rem;
+	}
+
+	.gallery-wall-card-footer small {
+		color: rgb(113 113 122);
+	}
+
+	@media (max-width: 720px) {
+		.gallery-wall-card.featured {
+			grid-column: auto;
+		}
+	}
+
 	:root:is(.dark) .gallery-back-link,
 	:root:is(.dark) .gallery-section-heading p,
 	:root:is(.dark) .gallery-wall-card-copy p,
-	:root:is(.dark) .gallery-wall-card-copy span {
+	:root:is(.dark) .gallery-wall-card-copy span,
+	:root:is(.dark) .gallery-wall-card-footer small {
 		color: rgb(212 212 216);
+	}
+
+	:root:is(.dark) .gallery-wall-card-meta span {
+		background: rgb(244 244 245 / 0.1);
+		color: rgb(244 244 245 / 0.82);
 	}
 
 	:root:is(.dark) .gallery-tab {
@@ -208,8 +268,14 @@ const items = getGalleryItemsByCategory(category.slug);
 		:root:not(.light) .gallery-back-link,
 		:root:not(.light) .gallery-section-heading p,
 		:root:not(.light) .gallery-wall-card-copy p,
-		:root:not(.light) .gallery-wall-card-copy span {
+		:root:not(.light) .gallery-wall-card-copy span,
+		:root:not(.light) .gallery-wall-card-footer small {
 			color: rgb(212 212 216);
+		}
+
+		:root:not(.light) .gallery-wall-card-meta span {
+			background: rgb(244 244 245 / 0.1);
+			color: rgb(244 244 245 / 0.82);
 		}
 
 		:root:not(.light) .gallery-tab {

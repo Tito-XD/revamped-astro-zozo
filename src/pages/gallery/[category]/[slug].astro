@@ -26,6 +26,7 @@ const previousItem = items[(itemIndex - 1 + items.length) % items.length];
 const nextItem = items[(itemIndex + 1) % items.length];
 const hasFocusCharacters = Boolean(item.focusCharacters?.length);
 const defaultFocus = item.focusCharacters?.[0];
+const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
 ---
 
 <ScaffoldLayout
@@ -41,18 +42,25 @@ const defaultFocus = item.focusCharacters?.[0];
 			<span>{item.summary}</span>
 		</div>
 		<div class="gallery-detail-meta">
+			<span>{positionLabel}</span>
 			{item.year && <span>{item.year}</span>}
 			{item.location && <span>{item.location}</span>}
 			{item.credit && <span>{item.credit}</span>}
+			{hasFocusCharacters && <span>Character Focus</span>}
 		</div>
 	</section>
 
 	<section class="gallery-viewer-layout">
-		<div class="gallery-stage-panel">
+		<div
+			class="gallery-stage-panel"
+			data-gallery-shortcuts
+			data-prev-href={`/gallery/${category.slug}/${previousItem.slug}/`}
+			data-next-href={`/gallery/${category.slug}/${nextItem.slug}/`}
+			data-focus-scope={hasFocusCharacters ? '' : undefined}
+			data-selected-focus={defaultFocus?.id}
+		>
 			<div
 				class:list={['gallery-stage-frame', { 'has-focus-map': hasFocusCharacters }]}
-				data-focus-root={hasFocusCharacters ? '' : undefined}
-				data-selected-focus={defaultFocus?.id}
 			>
 				<img
 					src={item.image.src}
@@ -85,13 +93,19 @@ const defaultFocus = item.focusCharacters?.[0];
 										data-focus-trigger
 										data-focus-id={focus.id}
 										data-focus-name={focus.name}
+										data-focus-role={focus.role}
+										data-focus-note={focus.note}
 										data-focus-x={focus.x}
 										data-focus-y={focus.y}
 										data-focus-width={focus.width}
 										data-focus-height={focus.height}
 										data-focus-accent={focus.accent}
+										data-focus-portrait-src={focus.portrait.src}
+										data-focus-portrait-width={focus.portrait.width}
+										data-focus-portrait-height={focus.portrait.height}
 										style={`--x:${focus.x}%; --y:${focus.y}%; --w:${focus.width}%; --h:${focus.height}%; --accent:${focus.accent};`}
 										aria-label={`Highlight ${focus.name}`}
+										aria-pressed={focus.id === defaultFocus?.id ? 'true' : 'false'}
 									></button>
 								))
 							}
@@ -102,38 +116,64 @@ const defaultFocus = item.focusCharacters?.[0];
 
 			{
 				hasFocusCharacters && (
-					<section class="gallery-focus-roster" aria-label="Character roster">
-						{
-							item.focusCharacters?.map((focus) => (
-								<button
-									type="button"
-									class="gallery-focus-card"
-									data-focus-trigger
-									data-focus-id={focus.id}
-									data-focus-name={focus.name}
-									data-focus-x={focus.x}
-									data-focus-y={focus.y}
-									data-focus-width={focus.width}
-									data-focus-height={focus.height}
-									data-focus-accent={focus.accent}
-								>
-									<img
-										src={focus.portrait.src}
-										width={focus.portrait.width}
-										height={focus.portrait.height}
-										alt={`${focus.name} portrait`}
-										loading="lazy"
-										decoding="async"
-									/>
-									<div>
-										<strong>{focus.name}</strong>
-										<span>{focus.role}</span>
-										<p>{focus.note}</p>
-									</div>
-								</button>
-							))
-						}
-					</section>
+					<>
+						<section class="gallery-focus-spotlight" aria-live="polite">
+							<img
+								data-focus-portrait
+								src={defaultFocus?.portrait.src}
+								width={defaultFocus?.portrait.width}
+								height={defaultFocus?.portrait.height}
+								alt={defaultFocus ? `${defaultFocus.name} portrait` : ''}
+								loading="eager"
+								decoding="async"
+							/>
+							<div class="gallery-focus-spotlight-copy">
+								<p class="gallery-focus-spotlight-eyebrow">Character Focus</p>
+								<h2 data-focus-nameplate>{defaultFocus?.name}</h2>
+								<span data-focus-role>{defaultFocus?.role}</span>
+								<p data-focus-note>{defaultFocus?.note}</p>
+							</div>
+						</section>
+
+						<section class="gallery-focus-roster" aria-label="Character roster">
+							{
+								item.focusCharacters?.map((focus) => (
+									<button
+										type="button"
+										class="gallery-focus-card"
+										data-focus-trigger
+										data-focus-id={focus.id}
+										data-focus-name={focus.name}
+										data-focus-role={focus.role}
+										data-focus-note={focus.note}
+										data-focus-x={focus.x}
+										data-focus-y={focus.y}
+										data-focus-width={focus.width}
+										data-focus-height={focus.height}
+										data-focus-accent={focus.accent}
+										data-focus-portrait-src={focus.portrait.src}
+										data-focus-portrait-width={focus.portrait.width}
+										data-focus-portrait-height={focus.portrait.height}
+										aria-pressed={focus.id === defaultFocus?.id ? 'true' : 'false'}
+									>
+										<img
+											src={focus.portrait.src}
+											width={focus.portrait.width}
+											height={focus.portrait.height}
+											alt={`${focus.name} portrait`}
+											loading="lazy"
+											decoding="async"
+										/>
+										<div>
+											<strong>{focus.name}</strong>
+											<span>{focus.role}</span>
+											<p>{focus.note}</p>
+										</div>
+									</button>
+								))
+							}
+						</section>
+					</>
 				)
 			}
 
@@ -222,6 +262,10 @@ const defaultFocus = item.focusCharacters?.[0];
 	.gallery-stage-panel {
 		display: grid;
 		gap: 1rem;
+	}
+
+	.gallery-stage-panel[data-focus-scope] {
+		gap: 1.1rem;
 	}
 
 	.gallery-stage-frame {
@@ -319,6 +363,55 @@ const defaultFocus = item.focusCharacters?.[0];
 		gap: 0.85rem;
 	}
 
+	.gallery-focus-spotlight {
+		display: grid;
+		grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+		gap: 1rem;
+		align-items: center;
+		border-radius: 1.3rem;
+		border: 1px solid rgb(228 228 231 / 0.9);
+		background:
+			linear-gradient(135deg, rgb(255 255 255 / 0.96), rgb(244 244 245 / 0.98));
+		padding: 1rem;
+	}
+
+	.gallery-focus-spotlight img {
+		aspect-ratio: 4 / 5;
+		width: 100%;
+		border-radius: 1rem;
+		object-fit: cover;
+		box-shadow: 0 1rem 2rem rgb(24 24 27 / 0.1);
+	}
+
+	.gallery-focus-spotlight-copy {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.gallery-focus-spotlight-eyebrow,
+	.gallery-focus-spotlight-copy span {
+		margin: 0;
+		font-size: 0.76rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgb(113 113 122);
+	}
+
+	.gallery-focus-spotlight-copy h2,
+	.gallery-focus-spotlight-copy p {
+		margin: 0;
+	}
+
+	.gallery-focus-spotlight-copy h2 {
+		font-size: clamp(1.5rem, 2vw, 2rem);
+	}
+
+	.gallery-focus-spotlight-copy p:last-child {
+		padding-top: 0.15rem;
+		line-height: 1.7;
+		color: rgb(82 82 91);
+	}
+
 	.gallery-focus-card {
 		display: grid;
 		grid-template-columns: 5rem 1fr;
@@ -330,6 +423,15 @@ const defaultFocus = item.focusCharacters?.[0];
 		padding: 0.8rem;
 		text-align: left;
 		color: inherit;
+		transition:
+			transform 220ms ease,
+			border-color 220ms ease,
+			box-shadow 220ms ease;
+	}
+
+	.gallery-focus-card:hover,
+	.gallery-focus-card:focus-visible {
+		transform: translateY(-2px);
 	}
 
 	.gallery-focus-card img {
@@ -374,6 +476,7 @@ const defaultFocus = item.focusCharacters?.[0];
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
 		gap: 0.8rem;
+		align-items: start;
 	}
 
 	.gallery-thumb-card {
@@ -398,6 +501,24 @@ const defaultFocus = item.focusCharacters?.[0];
 
 	.gallery-thumb-card.active img {
 		border-color: rgb(24 24 27 / 0.92);
+	}
+
+	@media (max-width: 720px) {
+		.gallery-focus-spotlight {
+			grid-template-columns: 1fr;
+		}
+
+		.gallery-thumb-strip {
+			grid-auto-flow: column;
+			grid-auto-columns: minmax(8rem, 46vw);
+			overflow-x: auto;
+			padding-bottom: 0.35rem;
+			scroll-snap-type: x proximity;
+		}
+
+		.gallery-thumb-card {
+			scroll-snap-align: start;
+		}
 	}
 
 	.gallery-notes-panel {
@@ -450,6 +571,9 @@ const defaultFocus = item.focusCharacters?.[0];
 
 	:root:is(.dark) .gallery-detail-heading p,
 	:root:is(.dark) .gallery-detail-heading span,
+	:root:is(.dark) .gallery-focus-spotlight-eyebrow,
+	:root:is(.dark) .gallery-focus-spotlight-copy span,
+	:root:is(.dark) .gallery-focus-spotlight-copy p:last-child,
 	:root:is(.dark) .gallery-focus-card span,
 	:root:is(.dark) .gallery-focus-card p,
 	:root:is(.dark) .gallery-notes-eyebrow,
@@ -459,6 +583,7 @@ const defaultFocus = item.focusCharacters?.[0];
 
 	:root:is(.dark) .gallery-detail-meta span,
 	:root:is(.dark) .gallery-stage-frame,
+	:root:is(.dark) .gallery-focus-spotlight,
 	:root:is(.dark) .gallery-focus-card,
 	:root:is(.dark) .gallery-notes-card {
 		border-color: rgb(82 82 91 / 0.85);
@@ -478,6 +603,9 @@ const defaultFocus = item.focusCharacters?.[0];
 	@media (prefers-color-scheme: dark) {
 		:root:not(.light) .gallery-detail-heading p,
 		:root:not(.light) .gallery-detail-heading span,
+		:root:not(.light) .gallery-focus-spotlight-eyebrow,
+		:root:not(.light) .gallery-focus-spotlight-copy span,
+		:root:not(.light) .gallery-focus-spotlight-copy p:last-child,
 		:root:not(.light) .gallery-focus-card span,
 		:root:not(.light) .gallery-focus-card p,
 		:root:not(.light) .gallery-notes-eyebrow,
@@ -487,6 +615,7 @@ const defaultFocus = item.focusCharacters?.[0];
 
 		:root:not(.light) .gallery-detail-meta span,
 		:root:not(.light) .gallery-stage-frame,
+		:root:not(.light) .gallery-focus-spotlight,
 		:root:not(.light) .gallery-focus-card,
 		:root:not(.light) .gallery-notes-card {
 			border-color: rgb(82 82 91 / 0.85);
@@ -506,14 +635,18 @@ const defaultFocus = item.focusCharacters?.[0];
 </style>
 
 <script is:inline type="module">
-	const focusRoots = document.querySelectorAll('[data-focus-root]');
+	const focusRoots = document.querySelectorAll('[data-focus-scope]');
 
 	for (const root of focusRoots) {
 		if (!(root instanceof HTMLElement)) continue;
 
-		const triggers = Array.from(document.querySelectorAll('[data-focus-trigger]')).filter((trigger) => root.contains(trigger));
+		const triggers = Array.from(root.querySelectorAll('[data-focus-trigger]'));
 		const highlight = root.querySelector('[data-focus-highlight]');
 		const caption = root.querySelector('[data-focus-caption]');
+		const portrait = root.querySelector('[data-focus-portrait]');
+		const nameplate = root.querySelector('[data-focus-nameplate]');
+		const role = root.querySelector('[data-focus-role]');
+		const note = root.querySelector('[data-focus-note]');
 		let selectedFocusId = root.dataset.selectedFocus ?? '';
 
 		const applyFocus = (focusId) => {
@@ -540,9 +673,29 @@ const defaultFocus = item.focusCharacters?.[0];
 				caption.textContent = activeTrigger.dataset.focusName ?? '';
 			}
 
+			if (portrait instanceof HTMLImageElement) {
+				portrait.src = activeTrigger.dataset.focusPortraitSrc ?? portrait.src;
+				portrait.width = Number(activeTrigger.dataset.focusPortraitWidth ?? portrait.width);
+				portrait.height = Number(activeTrigger.dataset.focusPortraitHeight ?? portrait.height);
+				portrait.alt = `${activeTrigger.dataset.focusName ?? ''} portrait`;
+			}
+
+			if (nameplate instanceof HTMLElement) {
+				nameplate.textContent = activeTrigger.dataset.focusName ?? '';
+			}
+
+			if (role instanceof HTMLElement) {
+				role.textContent = activeTrigger.dataset.focusRole ?? '';
+			}
+
+			if (note instanceof HTMLElement) {
+				note.textContent = activeTrigger.dataset.focusNote ?? '';
+			}
+
 			for (const trigger of triggers) {
 				if (!(trigger instanceof HTMLElement)) continue;
 				trigger.classList.toggle('active', trigger.dataset.focusId === focusId);
+				trigger.setAttribute('aria-pressed', trigger.dataset.focusId === focusId ? 'true' : 'false');
 				if (trigger.classList.contains('gallery-focus-card')) {
 					trigger.style.setProperty('--card-accent', trigger.dataset.focusAccent ?? '#f59e0b');
 				}
@@ -576,5 +729,36 @@ const defaultFocus = item.focusCharacters?.[0];
 		root.addEventListener('mouseleave', () => {
 			applyFocus(root.dataset.selectedFocus ?? fallbackFocusId);
 		});
+	}
+
+	const shortcutRoots = document.querySelectorAll('[data-gallery-shortcuts]');
+
+	for (const root of shortcutRoots) {
+		if (!(root instanceof HTMLElement)) continue;
+
+		root.addEventListener('keydown', (event) => {
+			if (!(event instanceof KeyboardEvent)) return;
+			if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
+			const target = event.target;
+			if (
+				target instanceof HTMLElement &&
+				(target.tagName === 'INPUT' ||
+					target.tagName === 'TEXTAREA' ||
+					target.isContentEditable)
+			) {
+				return;
+			}
+
+			if (event.key === 'ArrowLeft' && root.dataset.prevHref) {
+				window.location.href = root.dataset.prevHref;
+			}
+
+			if (event.key === 'ArrowRight' && root.dataset.nextHref) {
+				window.location.href = root.dataset.nextHref;
+			}
+		});
+
+		root.tabIndex = 0;
 	}
 </script>
