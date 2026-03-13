@@ -1,0 +1,231 @@
+---
+import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
+import {
+	galleryCategories,
+	getGalleryCategory,
+	getGalleryItemsByCategory,
+} from '~/data/gallery';
+
+export const getStaticPaths = () =>
+	galleryCategories.map((category) => ({
+		params: { category: category.slug },
+		props: { categorySlug: category.slug },
+	}));
+
+const { categorySlug } = Astro.props;
+const category = getGalleryCategory(categorySlug);
+
+if (!category) {
+	throw new Error(`Unknown gallery category: ${categorySlug}`);
+}
+
+const items = getGalleryItemsByCategory(category.slug);
+---
+
+<ScaffoldLayout
+	title={`Gallery / ${category.title}`}
+	description={category.description}
+	currentNav={undefined}
+>
+	<section class="gallery-section-heading">
+		<a class="gallery-back-link" href="/gallery/">Gallery</a>
+		<p>{category.subtitle}</p>
+		<h1>{category.title}</h1>
+		<p>{category.description}</p>
+	</section>
+
+	<nav class="gallery-tab-list" aria-label="Gallery categories">
+		{
+			galleryCategories.map((entry) => (
+				<a
+					class:list={['gallery-tab', { active: entry.slug === category.slug }]}
+					href={`/gallery/${entry.slug}/`}
+				>
+					{entry.title}
+				</a>
+			))
+		}
+	</nav>
+
+	<section class="gallery-wall" aria-label={`${category.title} wall`}>
+		{
+			items.map((item) => (
+				<a class="gallery-wall-card" href={`/gallery/${category.slug}/${item.slug}/`}>
+					<img
+						src={item.image.src}
+						width={item.image.width}
+						height={item.image.height}
+						alt={item.alt}
+						loading="lazy"
+						decoding="async"
+					/>
+					<div class="gallery-wall-card-copy">
+						<p>{item.eyebrow}</p>
+						<h2>{item.title}</h2>
+						<span>{item.summary}</span>
+					</div>
+				</a>
+			))
+		}
+	</section>
+</ScaffoldLayout>
+
+<style is:global>
+	.gallery-section-heading {
+		display: grid;
+		gap: 0.45rem;
+		padding: 1.4rem 0 1rem;
+	}
+
+	.gallery-back-link {
+		width: fit-content;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: rgb(113 113 122);
+		text-decoration: none;
+	}
+
+	.gallery-section-heading p {
+		margin: 0;
+		max-width: 44rem;
+		line-height: 1.7;
+		color: rgb(82 82 91);
+	}
+
+	.gallery-section-heading h1 {
+		margin: 0;
+		font-size: clamp(2.35rem, 6vw, 4rem);
+		line-height: 1;
+	}
+
+	.gallery-tab-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding: 0.5rem 0 1.5rem;
+	}
+
+	.gallery-tab {
+		border-radius: 999px;
+		border: 1px solid rgb(212 212 216 / 0.9);
+		padding: 0.65rem 1rem;
+		font-size: 0.9rem;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.gallery-tab.active {
+		border-color: rgb(24 24 27 / 0.95);
+		background: rgb(24 24 27 / 0.95);
+		color: rgb(250 250 250);
+	}
+
+	.gallery-wall {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+		gap: 1rem;
+		padding-bottom: 1rem;
+	}
+
+	.gallery-wall-card {
+		position: relative;
+		display: grid;
+		overflow: hidden;
+		border-radius: 1.3rem;
+		border: 1px solid rgb(228 228 231 / 0.9);
+		background: rgb(250 250 250 / 0.92);
+		text-decoration: none;
+		color: inherit;
+		transition: transform 320ms ease, border-color 320ms ease;
+	}
+
+	.gallery-wall-card:hover,
+	.gallery-wall-card:focus-visible {
+		transform: translateY(-4px);
+		border-color: rgb(161 161 170 / 0.95);
+	}
+
+	.gallery-wall-card img {
+		aspect-ratio: 7 / 5;
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
+	}
+
+	.gallery-wall-card-copy {
+		display: grid;
+		gap: 0.35rem;
+		padding: 0.9rem 1rem 1rem;
+	}
+
+	.gallery-wall-card-copy p,
+	.gallery-wall-card-copy span {
+		margin: 0;
+		color: rgb(113 113 122);
+	}
+
+	.gallery-wall-card-copy p {
+		font-size: 0.72rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.gallery-wall-card-copy h2 {
+		margin: 0;
+		font-size: 1.15rem;
+	}
+
+	.gallery-wall-card-copy span {
+		font-size: 0.92rem;
+		line-height: 1.55;
+	}
+
+	:root:is(.dark) .gallery-back-link,
+	:root:is(.dark) .gallery-section-heading p,
+	:root:is(.dark) .gallery-wall-card-copy p,
+	:root:is(.dark) .gallery-wall-card-copy span {
+		color: rgb(212 212 216);
+	}
+
+	:root:is(.dark) .gallery-tab {
+		border-color: rgb(82 82 91 / 0.85);
+		background: rgb(39 39 42 / 0.88);
+	}
+
+	:root:is(.dark) .gallery-tab.active {
+		border-color: rgb(244 244 245 / 0.95);
+		background: rgb(244 244 245 / 0.95);
+		color: rgb(24 24 27);
+	}
+
+	:root:is(.dark) .gallery-wall-card {
+		border-color: rgb(82 82 91 / 0.8);
+		background: rgb(39 39 42 / 0.95);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not(.light) .gallery-back-link,
+		:root:not(.light) .gallery-section-heading p,
+		:root:not(.light) .gallery-wall-card-copy p,
+		:root:not(.light) .gallery-wall-card-copy span {
+			color: rgb(212 212 216);
+		}
+
+		:root:not(.light) .gallery-tab {
+			border-color: rgb(82 82 91 / 0.85);
+			background: rgb(39 39 42 / 0.88);
+		}
+
+		:root:not(.light) .gallery-tab.active {
+			border-color: rgb(244 244 245 / 0.95);
+			background: rgb(244 244 245 / 0.95);
+			color: rgb(24 24 27);
+		}
+
+		:root:not(.light) .gallery-wall-card {
+			border-color: rgb(82 82 91 / 0.8);
+			background: rgb(39 39 42 / 0.95);
+		}
+	}
+</style>
