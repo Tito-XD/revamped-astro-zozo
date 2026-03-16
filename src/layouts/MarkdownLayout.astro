@@ -25,10 +25,10 @@ const showTimes = showDate || showLastmod || showReadingTime;
 
 <ScaffoldLayout {...Astro.props}>
 	{title && show('title') && <h1 class="text-5xl font-bold">{title}</h1>}
-	<div class="my-[1dvh] text-neutral-600 lg:my-[3dvh] dark:text-neutral-300">
+	<div class="my-[1dvh] text-[var(--color-muted)] lg:my-[3dvh]">
 		{
 			showTimes && (
-				<div class="flex flex-col opacity-70 *:flex *:items-center lg:flex-row lg:gap-4">
+				<div class="flex flex-col opacity-75 *:flex *:items-center lg:flex-row lg:gap-4">
 					{showDate && (
 						<time datetime={date.toISOString()}>
 							<Icon name="ri:time-line" class="fill-current" title="date" aria-label="date" />
@@ -65,7 +65,7 @@ const showTimes = showDate || showLastmod || showReadingTime;
 				<div>
 					{tags.map((tag: string) => (
 						<a
-							class="mr-2 text-xl opacity-80 hover:opacity-100"
+							class="mr-2 text-xl opacity-80 hover:text-[var(--color-accent)] hover:opacity-100"
 							href={`/tags/${tag}/1`}
 							aria-label={`More posts of tag ${tag}`}
 						>
@@ -83,20 +83,19 @@ const showTimes = showDate || showLastmod || showReadingTime;
 			'dark:prose-invert',
 			'prose-p:hyphens-auto',
 			'prose-p:text-justify',
+			'prose-headings:text-[var(--color-text)]',
+			'prose-strong:text-[var(--color-text)]',
+			'prose-a:text-[var(--color-accent)]',
 			'prose-pre:rounded-lg',
-			'prose-pre:!bg-neutral-100', // override shiki theme
+			'prose-pre:!bg-[var(--color-surface-2)]',
 			'prose-img:rounded-lg',
 			'prose-video:rounded-lg',
-			//'[&_.toc-item]:my-0',
-			//'[&_.toc-level]:mt-0',
 			'[&_iframe]:rounded-lg',
 			'[&_p_code]:rounded',
-			'[&_p_code]:bg-neutral-100',
+			'[&_p_code]:bg-[var(--color-surface-2)]',
 			'[&_p_code]:p-1',
 			'[&_p_code]:before:content-none',
 			'[&_p_code]:after:content-none',
-			'dark:[&_p_code]:bg-[#121212]',
-			//{ '[&_.toc]:hidden': !show('toc') },
 		]}
 	>
 		<slot />
@@ -104,7 +103,7 @@ const showTimes = showDate || showLastmod || showReadingTime;
 	{
 		show('comments') && (
 			<>
-				<hr class="mx-auto my-4 h-1 w-48 rounded border-0 bg-zinc-200 md:my-10 dark:bg-zinc-700" />
+				<hr class="mx-auto my-4 h-px w-48 border-0 bg-[color:var(--color-border)] md:my-10" />
 				<Comments />
 			</>
 		)

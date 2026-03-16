@@ -20,8 +20,8 @@ if (post.data.hide?.includes('lastmod') && post.data.date) {
 				{post.data.title}
 			</a>
 		</h2>
-		<p class="text-lg">{post.data.description}</p>
-		<div class="text-neutral-500 dark:text-neutral-400">
+		<p class="text-lg text-[var(--color-text)]">{post.data.description}</p>
+		<div class="text-[var(--color-muted)]">
 			{
 				date && (
 					<time class="mr-5" datetime={date.toISOString()}>
@@ -33,7 +33,7 @@ if (post.data.hide?.includes('lastmod') && post.data.date) {
 				(!post.data.hide || !post.data.hide.includes('tags')) &&
 					post.data.tags?.map((tag) => (
 						<a
-							class="mr-2 hover:text-neutral-900 dark:hover:text-neutral-100"
+							class="mr-2 hover:text-[var(--color-accent)]"
 							href={`/tags/${tag}/1`}
 							aria-label={`More posts of tag ${tag}`}
 						>
@@ -46,7 +46,7 @@ if (post.data.hide?.includes('lastmod') && post.data.date) {
 	{
 		post.data.image && (
 			<Picture
-				class="mr-4 max-w-full rounded-lg xl:max-w-sm"
+				class="mr-4 max-w-full rounded-lg border border-[color:var(--color-border)] xl:max-w-sm"
 				src={post.data.image}
 				formats={['avif', 'webp']}
 				alt={`hero image for ${post.data.title}`}
@@ -54,4 +54,4 @@ if (post.data.hide?.includes('lastmod') && post.data.date) {
 		)
 	}
 </div>
-<hr />
+<hr class="border-[color:var(--color-border)]" />

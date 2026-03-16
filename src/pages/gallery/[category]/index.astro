@@ -95,7 +95,7 @@ const items = getGalleryItemsByCategory(category.slug);
 		font-size: 0.78rem;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
-		color: rgb(113 113 122);
+		color: var(--color-muted);
 		text-decoration: none;
 	}
 
@@ -103,7 +103,7 @@ const items = getGalleryItemsByCategory(category.slug);
 		margin: 0;
 		max-width: 44rem;
 		line-height: 1.7;
-		color: rgb(82 82 91);
+		color: color-mix(in srgb, var(--color-muted) 92%, var(--color-text));
 		overflow-wrap: anywhere;
 	}
 
@@ -123,7 +123,8 @@ const items = getGalleryItemsByCategory(category.slug);
 
 	.gallery-tab {
 		border-radius: 999px;
-		border: 1px solid rgb(212 212 216 / 0.9);
+		border: 1px solid var(--color-border);
+		background: color-mix(in srgb, var(--color-surface) 86%, var(--color-accent-soft));
 		padding: 0.65rem 1rem;
 		font-size: 0.9rem;
 		text-decoration: none;
@@ -131,9 +132,9 @@ const items = getGalleryItemsByCategory(category.slug);
 	}
 
 	.gallery-tab.active {
-		border-color: rgb(24 24 27 / 0.95);
-		background: rgb(24 24 27 / 0.95);
-		color: rgb(250 250 250);
+		border-color: color-mix(in srgb, var(--color-accent) 84%, var(--color-border));
+		background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+		box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 24%, transparent);
 	}
 
 	.gallery-wall {
@@ -149,17 +150,18 @@ const items = getGalleryItemsByCategory(category.slug);
 		min-width: 0;
 		overflow: hidden;
 		border-radius: 1.3rem;
-		border: 1px solid rgb(228 228 231 / 0.9);
-		background: rgb(250 250 250 / 0.92);
+		border: 1px solid var(--color-border);
+		background: color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft));
 		text-decoration: none;
 		color: inherit;
+		box-shadow: 0 0.85rem 1.8rem rgba(var(--color-shadow-rgb), 0.06);
 		transition: transform 320ms ease, border-color 320ms ease;
 	}
 
 	.gallery-wall-card:hover,
 	.gallery-wall-card:focus-visible {
 		transform: translateY(-4px);
-		border-color: rgb(161 161 170 / 0.95);
+		border-color: color-mix(in srgb, var(--color-accent) 68%, var(--color-border));
 	}
 
 	.gallery-wall-card img {
@@ -168,7 +170,6 @@ const items = getGalleryItemsByCategory(category.slug);
 		width: 100%;
 		object-fit: cover;
 	}
-
 
 	.gallery-wall-card-copy {
 		display: grid;
@@ -180,7 +181,7 @@ const items = getGalleryItemsByCategory(category.slug);
 	.gallery-wall-card-copy p,
 	.gallery-wall-card-copy span {
 		margin: 0;
-		color: rgb(113 113 122);
+		color: var(--color-muted);
 	}
 
 	.gallery-wall-card-meta {
@@ -200,9 +201,9 @@ const items = getGalleryItemsByCategory(category.slug);
 
 	.gallery-wall-card-meta span {
 		border-radius: 999px;
-		background: rgb(24 24 27 / 0.08);
+		background: color-mix(in srgb, var(--color-accent-soft) 72%, var(--color-surface));
 		padding: 0.3rem 0.6rem;
-		color: rgb(24 24 27 / 0.72);
+		color: color-mix(in srgb, var(--color-accent) 72%, var(--color-text));
 	}
 
 	.gallery-wall-card-copy h2 {
@@ -214,7 +215,10 @@ const items = getGalleryItemsByCategory(category.slug);
 	.gallery-wall-card-copy span {
 		font-size: 0.92rem;
 		line-height: 1.55;
+		text-transform: none;
+		letter-spacing: normal;
 		overflow-wrap: anywhere;
+		color: color-mix(in srgb, var(--color-muted) 92%, var(--color-text));
 	}
 
 	.gallery-wall-card-footer {
@@ -225,67 +229,7 @@ const items = getGalleryItemsByCategory(category.slug);
 	}
 
 	.gallery-wall-card-footer small {
-		color: rgb(113 113 122);
-	}
-
-
-	:root:is(.dark) .gallery-back-link,
-	:root:is(.dark) .gallery-section-heading p,
-	:root:is(.dark) .gallery-wall-card-copy p,
-	:root:is(.dark) .gallery-wall-card-copy span,
-	:root:is(.dark) .gallery-wall-card-footer small {
-		color: rgb(212 212 216);
-	}
-
-	:root:is(.dark) .gallery-wall-card-meta span {
-		background: rgb(244 244 245 / 0.1);
-		color: rgb(244 244 245 / 0.82);
-	}
-
-	:root:is(.dark) .gallery-tab {
-		border-color: rgb(82 82 91 / 0.85);
-		background: rgb(39 39 42 / 0.88);
-	}
-
-	:root:is(.dark) .gallery-tab.active {
-		border-color: rgb(244 244 245 / 0.95);
-		background: rgb(244 244 245 / 0.95);
-		color: rgb(24 24 27);
-	}
-
-	:root:is(.dark) .gallery-wall-card {
-		border-color: rgb(82 82 91 / 0.8);
-		background: rgb(39 39 42 / 0.95);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root:not(.light) .gallery-back-link,
-		:root:not(.light) .gallery-section-heading p,
-		:root:not(.light) .gallery-wall-card-copy p,
-		:root:not(.light) .gallery-wall-card-copy span,
-		:root:not(.light) .gallery-wall-card-footer small {
-			color: rgb(212 212 216);
-		}
-
-		:root:not(.light) .gallery-wall-card-meta span {
-			background: rgb(244 244 245 / 0.1);
-			color: rgb(244 244 245 / 0.82);
-		}
-
-		:root:not(.light) .gallery-tab {
-			border-color: rgb(82 82 91 / 0.85);
-			background: rgb(39 39 42 / 0.88);
-		}
-
-		:root:not(.light) .gallery-tab.active {
-			border-color: rgb(244 244 245 / 0.95);
-			background: rgb(244 244 245 / 0.95);
-			color: rgb(24 24 27);
-		}
-
-		:root:not(.light) .gallery-wall-card {
-			border-color: rgb(82 82 91 / 0.8);
-			background: rgb(39 39 42 / 0.95);
-		}
+		color: var(--color-muted);
 	}
 </style>
+

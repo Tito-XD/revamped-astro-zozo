@@ -21,7 +21,7 @@ const navs = [
 				<li>
 					<a
 						href={nav.href}
-						class="text-neutral-700 opacity-75 hover:opacity-100 dark:text-neutral-50"
+						class="nav-link"
 						aria-label={`Navigate to ${nav.name}`}
 						aria-current={currentNav === nav.name ? 'page' : undefined}
 					>
@@ -32,3 +32,22 @@ const navs = [
 		}
 	</ul>
 </nav>
+
+<style>
+	.nav-link {
+		color: var(--color-text);
+		opacity: 0.78;
+		text-decoration: none;
+	}
+
+	.nav-link:hover,
+	.nav-link:focus-visible {
+		opacity: 1;
+		color: var(--color-accent);
+	}
+
+	.nav-link[aria-current='page'] {
+		color: var(--color-accent);
+		opacity: 1;
+	}
+</style>

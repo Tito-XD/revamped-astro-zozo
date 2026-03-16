@@ -4,15 +4,15 @@ import { FooterDescription, Hide } from '~/config';
 
 <footer class="mt-[3dvh] text-center lg:mt-[4dvh]" transition:persist>
 	{!Hide.includes('footerDescription') && <p class="mb-[1dvh] lg:mb-[2dvh]">{FooterDescription}</p>}
-	<p class="text-neutral-700 opacity-75 dark:text-neutral-300">
+	<p class="text-[var(--color-muted)] opacity-80">
 		&copy; {new Date().getFullYear()} Tito_XD. Powered by <a
-			class="underline"
+			class="underline decoration-[color:var(--color-accent)] underline-offset-4"
 			href="https://astro.build"
 			target="_blank"
 			rel="noopener"
 			aria-label="Read more about Astro">Astro</a
 		> and <a
-			class="underline"
+			class="underline decoration-[color:var(--color-accent)] underline-offset-4"
 			href="https://github.com/ladit/astro-blog-zozo"
 			target="_blank"
 			rel="noopener"

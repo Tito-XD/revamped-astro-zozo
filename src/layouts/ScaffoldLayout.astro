@@ -12,45 +12,52 @@ interface Props {
 }
 ---
 
-<BaseLayout
-	{...Astro.props}
-	rootClass="scrollbar-none"
-	bodyClass={[
-		'text-neutral-600',
-		'flex',
-		'flex-col',
-		'justify-between',
-		'min-h-dvh',
-		'py-[2dvh]',
-		'lg:pt-[6dvh]',
-		'lg:pb-[3dvh]',
-		'bg-[#f7f7f7]',
-		'bg-local',
-		'dark:bg-[#202124]',
-		'dark:text-neutral-50',
-	]}
->
-	<div
-		class:list={[
-			'mx-auto',
-			'flex',
-			'w-[90dvw]',
-			'max-w-[1400px]',
-			'flex-col',
-			'bg-neutral-50',
-			'bg-local',
-			'p-[3dvw]',
-			'shadow-[0_0.5em_1em_0_rgba(236,236,236,0.86)]',
-			'lg:p-[2dvw]',
-			'dark:bg-[#212223]',
-			'dark:shadow-[0_0_0.5em_0.25em_rgba(136,136,136,0.35)]',
-		]}
-	>
+<BaseLayout {...Astro.props} rootClass="scrollbar-none" bodyClass="app-body">
+	<div class="app-panel">
 		<Header currentNav={Astro.props.currentNav} />
-		<main class="px-[2dvw] pt-[2dvh] lg:pt-[2dvh]">
+		<main class="app-main">
 			<slot />
 		</main>
 	</div>
 	<Footer />
 	<BackToTop />
 </BaseLayout>
+
+<style>
+	:global(.app-body) {
+		display: flex;
+		min-height: 100dvh;
+		flex-direction: column;
+		justify-content: space-between;
+		background: transparent;
+		padding: 2dvh 0;
+		color: var(--color-text);
+	}
+
+	.app-panel {
+		margin: 0 auto;
+		display: flex;
+		width: 90dvw;
+		max-width: 1400px;
+		flex-direction: column;
+		border: 1px solid color-mix(in srgb, var(--color-border) 92%, var(--color-accent-soft));
+		background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, var(--color-accent-soft) 4%), var(--color-surface));
+		padding: 3dvw;
+		box-shadow: 0 0.75rem 2.25rem 0 rgba(var(--color-shadow-rgb), 0.12);
+	}
+
+	.app-main {
+		padding: 2dvh 2dvw 0;
+	}
+
+	@media (min-width: 1024px) {
+		:global(.app-body) {
+			padding-top: 6dvh;
+			padding-bottom: 3dvh;
+		}
+
+		.app-panel {
+			padding: 2dvw;
+		}
+	}
+</style>

@@ -92,7 +92,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 				</ul>
 			</div>
 		) : (
-			<div class="mt-8 rounded-2xl border border-dashed border-zinc-300 p-6 text-sm dark:border-zinc-700">
+			<div class="mt-8 rounded-2xl border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 text-sm text-[var(--color-muted)]">
 				<p>
 					No friend links yet. Edit <code>src/data/friends.ts</code> to add avatar, ID, bio, and link.
 				</p>
@@ -117,9 +117,9 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		aspect-ratio: 7 / 5;
 		overflow: hidden;
 		border-radius: 1rem;
-		border: 1px solid rgb(228 228 231 / 0.9);
-		background: rgb(250 250 250 / 0.95);
-		box-shadow: 0 6px 20px rgb(9 9 11 / 0.05);
+		border: 1px solid var(--color-border);
+		background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 95%, var(--color-accent-soft) 5%), color-mix(in srgb, var(--color-surface) 78%, var(--color-surface-2)));
+		box-shadow: 0 0.75rem 1.6rem rgba(var(--color-shadow-rgb), 0.08);
 		transition: transform 320ms ease;
 	}
 
@@ -142,29 +142,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 	}
 
 	.friend-card::after {
-		background: rgb(255 255 255 / 0.5);
-	}
-
-	:root:is(.dark) .friend-card {
-		border-color: rgb(82 82 91 / 0.75);
-		background: rgb(39 39 42 / 0.85);
-		box-shadow: 0 10px 24px rgb(2 6 23 / 0.35);
-	}
-
-	:root:is(.dark) .friend-card::after {
-		background: rgb(17 24 39 / 0.5);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root:not(.light) .friend-card {
-			border-color: rgb(82 82 91 / 0.75);
-			background: rgb(39 39 42 / 0.85);
-			box-shadow: 0 10px 24px rgb(2 6 23 / 0.35);
-		}
-
-		:root:not(.light) .friend-card::after {
-			background: rgb(17 24 39 / 0.5);
-		}
+		background: color-mix(in srgb, var(--color-surface) 54%, transparent);
 	}
 
 	.friend-card[data-has-avatar='false']::before,
@@ -214,7 +192,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		flex-shrink: 0;
 		border-radius: 999px;
 		object-fit: cover;
-		border: 1px solid rgb(212 212 216 / 0.85);
+		border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-surface));
 	}
 
 	.friend-card-trigger h2 {
@@ -248,14 +226,15 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		margin: 0;
 		font-size: 0.84rem;
 		line-height: 1.45;
+		color: color-mix(in srgb, var(--color-muted) 92%, var(--color-text));
 	}
 
 	.friend-details a {
 		font-size: 0.8rem;
+		color: var(--color-accent);
 		text-decoration: underline;
 		word-break: break-all;
 	}
-
 </style>
 
 <script is:inline type="module">
@@ -319,3 +298,4 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		});
 	}
 </script>
+
