@@ -1,5 +1,7 @@
 # Tito's Cafe
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/aeecbae6-3875-47c0-a923-9ef102e4928b/deploy-status)](https://app.netlify.com/projects/titocafe/deploys)
+
 Tito's Cafe is a personal blog and gallery built with [Astro](https://astro.build), [Tailwind CSS](https://tailwindcss.com/), and [Bun](https://bun.sh/).
 
 This project started from [astro-blog-zozo](https://github.com/ladit/astro-blog-zozo), which itself was inspired by [hugo-theme-zozo](https://github.com/varkai/hugo-theme-zozo). The current codebase has been substantially customized for Tito's Cafe, including layout rewrites, a revised theme system, custom gallery pages, a friends page, and ongoing content model changes.
