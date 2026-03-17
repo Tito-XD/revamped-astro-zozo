@@ -5,9 +5,15 @@ Revamped Astro Zozo is a sample-first Astro theme branch built with [Astro](http
 It starts from [astro-blog-zozo](https://github.com/ladit/astro-blog-zozo), which itself was inspired by [hugo-theme-zozo](https://github.com/varkai/hugo-theme-zozo), then pushes the theme toward a warmer editorial surface with more room for galleries, curated links, and landing-page style intros.
 
 Repository: [Tito-XD/tito-cafe-blog](https://github.com/Tito-XD/tito-cafe-blog/tree/codex/revamped-astro-zozo)
+Demo: [revamped-astrozozo.netlify.app](https://revamped-astrozozo.netlify.app)
 
 Please read the [Code of Conduct](./CODE_OF_CONDUCT.md) before contributing or participating in project discussions.
 Additional attribution and copyright notes are collected in [NOTICE](./NOTICE).
+
+## Documentation
+
+- [Getting Started](./docs/getting-started.md)
+- [Publishing Notes](./docs/publishing-notes.md)
 
 ## Thanks
 

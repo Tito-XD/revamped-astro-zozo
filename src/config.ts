@@ -1,6 +1,6 @@
 import type { PostHideElements } from '~/content.config';
 
-export const Site = 'https://example.com';
+export const Site = 'https://revamped-astrozozo.netlify.app';
 export const SiteLanguage = 'en';
 export const SiteTitle = 'Revamped Astro Zozo';
 export const SiteDescription = 'A polished Astro blog template with gallery, friends, and richer content surfaces.';

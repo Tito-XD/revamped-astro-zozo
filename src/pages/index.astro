@@ -7,8 +7,8 @@ import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
 	<section class="home-intro">
 		<img
 			class="home-intro__art"
-			src="/sample/home-hero.svg"
-			alt="Sample hero illustration for Revamped Astro Zozo"
+			src="/sample/brand-tile.svg"
+			alt="Sample square avatar for Revamped Astro Zozo"
 			loading="eager"
 		/>
 		<div class="home-intro__copy">
@@ -37,8 +37,12 @@ import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
 	}
 
 	.home-intro__art {
-		max-width: min(100%, 21rem);
+		max-width: min(100%, 14rem);
 		justify-self: center;
+		border-radius: calc(var(--radius-card) + 0.15rem);
+		box-shadow:
+			0 1rem 2.1rem rgba(var(--color-shadow-rgb), 0.12),
+			inset 0 1px 0 color-mix(in srgb, white 50%, transparent);
 	}
 
 	.home-intro__copy {
@@ -86,7 +90,7 @@ import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
 
 	@media (min-width: 1024px) {
 		.home-intro {
-			grid-template-columns: minmax(15rem, 21rem) minmax(0, 1fr);
+			grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
 			gap: 1.75rem;
 		}
 
