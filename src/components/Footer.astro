@@ -12,6 +12,17 @@ import { FooterDescription, Hide } from '~/config';
 			/>
 		</a>
 	</p>
+	<p class="site-footer__hosting">
+		<a
+			class="site-footer__link"
+			href="https://www.netlify.com/"
+			target="_blank"
+			rel="noopener"
+			aria-label="This site is powered by Netlify"
+		>
+			This site is powered by Netlify
+		</a>
+	</p>
 	<p class="site-footer__copyright">
 		&copy; {new Date().getFullYear()} Tito's Cafe / &#x5934;&#x5934;&#x5496;&#x5561;&#x5C4B;. Powered by <a
 			class="site-footer__link"
@@ -51,6 +62,11 @@ import { FooterDescription, Hide } from '~/config';
 
 	.site-footer__badge {
 		margin: 0 0 0.9rem;
+	}
+
+	.site-footer__hosting {
+		margin: 0 0 0.9rem;
+		font-size: 0.92rem;
 	}
 
 	.site-footer__badge a {

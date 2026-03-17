@@ -6,6 +6,8 @@ Tito's Cafe is a personal blog, friends page, and gallery built with [Astro](htt
 
 This project started from [astro-blog-zozo](https://github.com/ladit/astro-blog-zozo), which itself was inspired by [hugo-theme-zozo](https://github.com/varkai/hugo-theme-zozo). The current codebase has been extensively rewritten for Tito's Cafe with a custom visual system, revised layouts, a gallery content model, and site-specific interaction design.
 
+Please read the [Code of Conduct](./CODE_OF_CONDUCT.md) before contributing or participating in project discussions.
+
 ## Thanks
 
 Special thanks to the original authors and contributors whose work made this project possible.
