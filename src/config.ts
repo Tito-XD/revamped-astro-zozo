@@ -1,4 +1,4 @@
-import type { PostHideElements } from '~/content.config';
+﻿import type { PostHideElements } from '~/content.config';
 
 export const Site = 'https://tito.cafe';
 export const SiteLanguage = 'zh';
@@ -11,11 +11,14 @@ export const PageSize = 15;
 // socialPlatform => userName
 // check components/Header.astro socialConfig for more info
 export const Socials: Record<string, Record<string, string>> = {
-	mail: { url: 'mailto:titow.xd@outlook.com' },
+	xiaohongshu: {
+		url: 'https://www.xiaohongshu.com/user/profile/606528a100000000010092d3',
+	},
 	x: { url: 'https://x.com/Tito_XD2333' },
-	telegram: { url: 'https://t.me/@tito_xd' },
 	weibo: { url: 'https://weibo.com/u/2100498774' },
 	bilibili: { url: 'https://space.bilibili.com/5895560' },
+	telegram: { url: 'https://t.me/@tito_xd' },
+	mail: { url: 'mailto:titow.xd@outlook.com' },
 	rss: { url: '/rss.xml' },
 };
 

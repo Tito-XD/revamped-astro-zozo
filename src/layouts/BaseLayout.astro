@@ -69,6 +69,14 @@ const socialImg = new URL(socialImage ?? '/og.png', Astro.url).href;
 					--color-accent: #4a90e2;
 					--color-accent-soft: #e1f0ff;
 					--color-shadow-rgb: 74 144 226;
+					--radius-shell: 1.9rem;
+					--radius-card: 1.3rem;
+					--radius-soft: 1rem;
+					--radius-button: 0.95rem;
+					--radius-chip: 0.8rem;
+					--radius-media: 1.05rem;
+					--motion-gentle: 260ms cubic-bezier(0.22, 1, 0.36, 1);
+					--motion-lift: 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
 					--pagefind-ui-scale: 1;
 					--pagefind-ui-primary: var(--color-text);
 					--pagefind-ui-text: var(--color-muted);
@@ -122,8 +130,46 @@ const socialImg = new URL(socialImage ?? '/og.png', Astro.url).href;
 					color: var(--color-text);
 				}
 
+				:focus-visible {
+					outline: 2px solid color-mix(in srgb, var(--color-accent) 72%, transparent);
+					outline-offset: 2px;
+				}
+
 				a {
 					text-decoration-color: color-mix(in srgb, var(--color-accent) 38%, transparent);
+				}
+
+				.ui-type-link {
+					position: relative;
+					display: inline-grid;
+					overflow: hidden;
+					line-height: 1.08;
+					text-decoration: none;
+				}
+
+				.ui-type-link__text,
+				.ui-type-link::after {
+					grid-area: 1 / 1;
+					transition:
+						transform var(--motion-gentle),
+						color var(--motion-gentle);
+					will-change: transform;
+				}
+
+				.ui-type-link::after {
+					content: attr(data-text);
+					color: var(--color-accent);
+					transform: translateY(115%);
+				}
+
+				.ui-type-link:hover .ui-type-link__text,
+				.ui-type-link:focus-visible .ui-type-link__text {
+					transform: translateY(-115%);
+				}
+
+				.ui-type-link:hover::after,
+				.ui-type-link:focus-visible::after {
+					transform: translateY(0);
 				}
 
 				::selection {

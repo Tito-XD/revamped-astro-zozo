@@ -70,7 +70,7 @@ for (const post of posts) {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.55rem;
-		border-radius: 1rem;
+		border-radius: var(--radius-soft);
 		border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-accent-soft));
 		background: color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft) 6%);
 		padding: 0.9rem 1rem;
@@ -78,11 +78,11 @@ for (const post of posts) {
 		text-decoration: none;
 		box-shadow: 0 0.5rem 1.35rem rgba(var(--color-shadow-rgb), 0.08);
 		transition:
-			transform 280ms ease,
-			border-color 280ms ease,
-			background 280ms ease,
-			box-shadow 280ms ease,
-			color 280ms ease;
+			transform var(--motion-lift),
+			border-color var(--motion-lift),
+			background var(--motion-lift),
+			box-shadow var(--motion-lift),
+			color var(--motion-lift);
 	}
 
 	.tag-chip:hover,
@@ -105,7 +105,7 @@ for (const post of posts) {
 	}
 
 	.tag-chip span {
-		border-radius: 999px;
+		border-radius: calc(var(--radius-chip) - 0.12rem);
 		background: color-mix(in srgb, var(--color-accent-soft) 72%, var(--color-surface));
 		padding: 0.2rem 0.55rem;
 		font-size: 0.78rem;

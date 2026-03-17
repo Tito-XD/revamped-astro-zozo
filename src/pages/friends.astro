@@ -92,7 +92,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 				</ul>
 			</div>
 		) : (
-			<div class="mt-8 rounded-2xl border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 text-sm text-[var(--color-muted)]">
+			<div class="mt-8 rounded-[var(--radius-card)] border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 text-sm text-[var(--color-muted)]">
 				<p>
 					No friend links yet. Edit <code>src/data/friends.ts</code> to add avatar, ID, bio, and link.
 				</p>
@@ -116,7 +116,7 @@ const toAriaLabel = (friend: (typeof sortedFriends)[number], index: number) =>
 		min-height: 10.5rem;
 		aspect-ratio: 7 / 5;
 		overflow: hidden;
-		border-radius: 1rem;
+		border-radius: var(--radius-soft);
 		border: 1px solid var(--color-border);
 		background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 95%, var(--color-accent-soft) 5%), color-mix(in srgb, var(--color-surface) 78%, var(--color-surface-2)));
 		box-shadow: 0 0.75rem 1.6rem rgba(var(--color-shadow-rgb), 0.08);

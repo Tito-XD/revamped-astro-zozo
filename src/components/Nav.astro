@@ -21,11 +21,12 @@ const navs = [
 				<li>
 					<a
 						href={nav.href}
-						class="nav-link"
+						class="nav-link ui-type-link"
+						data-text={nav.name}
 						aria-label={`Navigate to ${nav.name}`}
 						aria-current={currentNav === nav.name ? 'page' : undefined}
 					>
-						{nav.name}
+						<span class="ui-type-link__text">{nav.name}</span>
 					</a>
 				</li>
 			))
@@ -35,21 +36,21 @@ const navs = [
 
 <style>
 	.nav-link {
-		display: inline-flex;
+		display: inline-grid;
 		align-items: center;
 		justify-content: center;
-		border-radius: 999px;
+		border-radius: var(--radius-button);
 		border: 1px solid transparent;
 		padding: 0.45rem 0.8rem;
 		color: var(--color-text);
 		opacity: 0.78;
 		text-decoration: none;
 		transition:
-			transform 220ms ease,
-			border-color 220ms ease,
-			background 220ms ease,
-			color 220ms ease,
-			opacity 220ms ease;
+			transform var(--motion-gentle),
+			border-color var(--motion-gentle),
+			background var(--motion-gentle),
+			color var(--motion-gentle),
+			opacity var(--motion-gentle);
 	}
 
 	.nav-link:hover,

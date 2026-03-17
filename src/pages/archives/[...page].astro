@@ -24,8 +24,13 @@ const { page } = Astro.props;
 			return (
 				<div class="archive-row">
 					<h5 class="archive-title">
-						<a class="archive-link" href={`/posts/${getPostRouteSlug(post)}`} aria-label={`Read post: ${post.data.title}`}>
-							{post.data.title}
+						<a
+							class="archive-link ui-type-link"
+							data-text={post.data.title}
+							href={`/posts/${getPostRouteSlug(post)}`}
+							aria-label={`Read post: ${post.data.title}`}
+						>
+							<span class="ui-type-link__text">{post.data.title}</span>
 						</a>
 					</h5>
 					{date && <time class="archive-date" datetime={date.toISOString()}>{date.toLocaleDateString()}</time>}
@@ -72,16 +77,16 @@ const { page } = Astro.props;
 		justify-content: space-between;
 		gap: 1rem;
 		margin-bottom: 0.9rem;
-		border-radius: 1.15rem;
+		border-radius: var(--radius-soft);
 		border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-accent-soft));
 		background: color-mix(in srgb, var(--color-surface) 95%, var(--color-surface-2) 5%);
 		padding: 1rem 1.1rem;
 		transition:
-			transform 280ms ease,
-			border-color 280ms ease,
-			box-shadow 280ms ease,
-			background 280ms ease,
-			color 280ms ease;
+			transform var(--motion-lift),
+			border-color var(--motion-lift),
+			box-shadow var(--motion-lift),
+			background var(--motion-lift),
+			color var(--motion-lift);
 	}
 
 	.archive-row:hover,

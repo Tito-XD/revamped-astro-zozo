@@ -4,7 +4,7 @@ import {
 	galleryCategories,
 	getGalleryCategory,
 	getGalleryItemsByCategory,
-} from '~/data/gallery';
+} from '~/utils/gallery';
 
 export const getStaticPaths = () =>
 	galleryCategories.map((category) => ({
@@ -19,7 +19,7 @@ if (!category) {
 	throw new Error(`Unknown gallery category: ${categorySlug}`);
 }
 
-const items = getGalleryItemsByCategory(category.slug);
+const items = await getGalleryItemsByCategory(category.slug);
 ---
 
 <ScaffoldLayout
@@ -53,28 +53,28 @@ const items = getGalleryItemsByCategory(category.slug);
 				<a
 					class:list={[
 						'gallery-wall-card',
-						{ interactive: Boolean(item.focusCharacters?.length) },
+						{ interactive: Boolean(item.data.focusCharacters?.length) },
 					]}
-					href={`/gallery/${category.slug}/${item.slug}/`}
+					href={`/gallery/${category.slug}/${item.data.slug}/`}
 				>
 					<img
-						src={item.image.src}
-						width={item.image.width}
-						height={item.image.height}
-						alt={item.alt}
+						src={item.data.image.src}
+						width={item.data.image.width}
+						height={item.data.image.height}
+						alt={item.data.alt}
 						loading="lazy"
 						decoding="async"
 					/>
 					<div class="gallery-wall-card-copy">
 						<div class="gallery-wall-card-meta">
-							<p>{item.eyebrow}</p>
-							{item.focusCharacters?.length && <span>Interactive Focus</span>}
+							<p>{item.data.eyebrow}</p>
+							{item.data.focusCharacters?.length && <span>Interactive Focus</span>}
 						</div>
-						<h2>{item.title}</h2>
-						<span>{item.summary}</span>
+						<h2>{item.data.title}</h2>
+						<span>{item.data.summary}</span>
 						<div class="gallery-wall-card-footer">
-							<small>{item.year ?? category.title}</small>
-							<small>{item.location ?? item.credit ?? 'Open viewer'}</small>
+							<small>{item.data.year ?? category.title}</small>
+							<small>{item.data.location ?? item.data.credit ?? 'Open viewer'}</small>
 						</div>
 					</div>
 				</a>
@@ -122,7 +122,7 @@ const items = getGalleryItemsByCategory(category.slug);
 	}
 
 	.gallery-tab {
-		border-radius: 999px;
+		border-radius: var(--radius-chip);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 86%, var(--color-accent-soft));
 		padding: 0.65rem 1rem;
@@ -149,13 +149,13 @@ const items = getGalleryItemsByCategory(category.slug);
 		display: grid;
 		min-width: 0;
 		overflow: hidden;
-		border-radius: 1.3rem;
+		border-radius: var(--radius-card);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft));
 		text-decoration: none;
 		color: inherit;
 		box-shadow: 0 0.85rem 1.8rem rgba(var(--color-shadow-rgb), 0.06);
-		transition: transform 320ms ease, border-color 320ms ease;
+		transition: transform var(--motion-lift), border-color var(--motion-lift);
 	}
 
 	.gallery-wall-card:hover,
@@ -200,7 +200,7 @@ const items = getGalleryItemsByCategory(category.slug);
 	}
 
 	.gallery-wall-card-meta span {
-		border-radius: 999px;
+		border-radius: var(--radius-chip);
 		background: color-mix(in srgb, var(--color-accent-soft) 72%, var(--color-surface));
 		padding: 0.3rem 0.6rem;
 		color: color-mix(in srgb, var(--color-accent) 72%, var(--color-text));
@@ -232,4 +232,3 @@ const items = getGalleryItemsByCategory(category.slug);
 		color: var(--color-muted);
 	}
 </style>
-

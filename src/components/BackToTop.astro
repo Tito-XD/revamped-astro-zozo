@@ -21,13 +21,18 @@ import { Icon } from 'astro-icon/components';
 		height: 2.75rem;
 		width: 2.75rem;
 		place-content: center;
-		border-radius: 999px;
+		border-radius: var(--radius-button);
 		border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-accent-soft));
 		background: color-mix(in srgb, var(--color-surface) 84%, var(--color-accent-soft));
 		color: var(--color-text);
 		opacity: 0.68;
 		backdrop-filter: blur(12px);
 		box-shadow: 0 0.75rem 1.5rem rgba(var(--color-shadow-rgb), 0.16);
+		transition:
+			transform var(--motion-gentle),
+			color var(--motion-gentle),
+			opacity var(--motion-gentle),
+			border-color var(--motion-gentle);
 	}
 
 	.back-to-top:hover,
@@ -35,6 +40,7 @@ import { Icon } from 'astro-icon/components';
 		opacity: 1;
 		color: var(--color-accent);
 		transform: translateY(-2px);
+		border-color: color-mix(in srgb, var(--color-accent) 54%, var(--color-border));
 	}
 </style>
 

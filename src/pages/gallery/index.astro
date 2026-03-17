@@ -1,21 +1,23 @@
 ---
 import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
-import { galleryCategories, getGalleryItemsByCategory } from '~/data/gallery';
+import { galleryCategories, getGalleryItemsByCategory } from '~/utils/gallery';
 
-const categories = galleryCategories.map((category) => {
-	const items = getGalleryItemsByCategory(category.slug);
-	return {
-		...category,
-		count: items.length,
-		cover: items[0],
-		previews: items.slice(0, 3),
-		highlightCount: items.filter((item) => item.focusCharacters?.length).length,
-		latestYear: items
-			.map((item) => Number(item.year))
-			.filter((year) => Number.isFinite(year))
-			.sort((left, right) => right - left)[0],
-	};
-});
+const categories = await Promise.all(
+	galleryCategories.map(async (category) => {
+		const items = await getGalleryItemsByCategory(category.slug);
+		return {
+			...category,
+			count: items.length,
+			cover: items[0],
+			previews: items.slice(0, 3),
+			highlightCount: items.filter((item) => item.data.focusCharacters?.length).length,
+			latestYear: items
+				.map((item) => Number(item.data.year))
+				.filter((year) => Number.isFinite(year))
+				.sort((left, right) => right - left)[0],
+		};
+	}),
+);
 
 const totalWorks = categories.reduce((total, category) => total + category.count, 0);
 const totalHighlights = categories.reduce((total, category) => total + category.highlightCount, 0);
@@ -30,8 +32,7 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 		<p class="gallery-kicker">Gallery</p>
 		<h1>Illustration, Life, View</h1>
 		<p class="gallery-lead">
-			A quiet preview space for testing the gallery structure, pacing, and character-focus
-			interactions before it gets linked from the main site navigation.
+			Build the structure first, then keep growing it by dropping markdown, images, and notes into a fixed gallery folder.
 		</p>
 		<div class="gallery-hero-stats" aria-label="Gallery overview">
 			<div>
@@ -56,10 +57,10 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 					<div class="gallery-category-cover">
 						{category.cover && (
 							<img
-								src={category.cover.image.src}
-								width={category.cover.image.width}
-								height={category.cover.image.height}
-								alt={category.cover.alt}
+								src={category.cover.data.image.src}
+								width={category.cover.data.image.width}
+								height={category.cover.data.image.height}
+								alt={category.cover.data.alt}
 								loading="lazy"
 								decoding="async"
 							/>
@@ -80,9 +81,9 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 							{
 								category.previews.map((preview) => (
 									<img
-										src={preview.image.src}
-										width={preview.image.width}
-										height={preview.image.height}
+										src={preview.data.image.src}
+										width={preview.data.image.width}
+										height={preview.data.image.height}
 										alt=""
 										loading="lazy"
 										decoding="async"
@@ -141,7 +142,7 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 		display: grid;
 		gap: 0.15rem;
 		min-width: 8rem;
-		border-radius: 1.15rem;
+		border-radius: var(--radius-soft);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 84%, var(--color-accent-soft));
 		padding: 0.85rem 1rem;
@@ -171,13 +172,13 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 		display: grid;
 		min-width: 0;
 		overflow: hidden;
-		border-radius: 1.5rem;
+		border-radius: var(--radius-card);
 		border: 1px solid var(--color-border);
 		background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 95%, var(--color-accent-soft) 5%), color-mix(in srgb, var(--color-surface-2) 86%, var(--color-surface) 14%));
 		text-decoration: none;
 		color: inherit;
 		box-shadow: 0 1rem 2rem rgba(var(--color-shadow-rgb), 0.07);
-		transition: transform 320ms ease, border-color 320ms ease;
+		transition: transform var(--motion-lift), border-color var(--motion-lift);
 	}
 
 	.gallery-category-card:hover,
@@ -232,7 +233,7 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 	}
 
 	.gallery-category-overlay span {
-		border-radius: 999px;
+		border-radius: var(--radius-chip);
 		background: color-mix(in srgb, var(--color-surface) 16%, transparent);
 		padding: 0.3rem 0.6rem;
 		font-size: 0.72rem;
@@ -279,7 +280,7 @@ const totalHighlights = categories.reduce((total, category) => total + category.
 	.gallery-category-preview-strip img {
 		aspect-ratio: 1;
 		width: 100%;
-		border-radius: 0.95rem;
+		border-radius: var(--radius-media);
 		object-fit: cover;
 	}
 

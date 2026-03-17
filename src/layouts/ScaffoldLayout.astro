@@ -50,7 +50,7 @@ interface Props {
 			var(--color-border) 82%,
 			var(--color-accent-soft)
 		);
-		border-radius: 1.75rem;
+		border-radius: var(--radius-shell);
 		background:
 			linear-gradient(
 				180deg,
@@ -94,7 +94,7 @@ interface Props {
 
 		.app-panel {
 			min-height: calc(100dvh - 2rem);
-			border-radius: 1.25rem;
+			border-radius: calc(var(--radius-shell) - 0.45rem);
 			padding: 1.25rem;
 		}
 

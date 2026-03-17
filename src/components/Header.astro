@@ -1,72 +1,75 @@
 ---
-import fs from "node:fs/promises";
-import { Icon } from "astro-icon/components";
-import { Hide, SiteDescription, SiteTitle, Socials } from "~/config";
-import Nav from "./Nav.astro";
-import ThemeToggler from "./ThemeToggler.astro";
+import fs from 'node:fs/promises';
+import { Icon } from 'astro-icon/components';
+import { Hide, SiteDescription, SiteTitle, Socials } from '~/config';
+import Nav from './Nav.astro';
+import ThemeToggler from './ThemeToggler.astro';
 
 interface Props {
 	currentNav?: string;
 }
 const { currentNav } = Astro.props;
 
-const customLogo = (await fs.stat("./src/assets/logo.png")).isFile();
+const customLogo = (await fs.stat('./src/assets/logo.png')).isFile();
 
 const socialConfig: Record<string, Record<string, string>> = {
-	bilibili: { icon: "ri:bilibili-fill" },
-	dingding: { icon: "ri:dingding-fill" },
-	discord: { icon: "ri:discord-fill" },
-	douban: { icon: "ri:douban-fill" },
-	dribbble: { icon: "ri:dribbble-fill" },
-	facebook: { icon: "ri:facebook-box-fill" },
-	flickr: { icon: "ri:flickr-fill" },
-	github: { icon: "ri:github-fill" },
-	gitlab: { icon: "ri:gitlab-fill" },
-	google: { icon: "ri:google-fill" },
-	instagram: { icon: "ri:instagram-fill" },
-	kakaoTalk: { icon: "ri:kakao-talk-fill" },
-	line: { icon: "ri:line-fill" },
-	linkedin: { icon: "ri:linkedin-box-fill" },
-	mail: { icon: "ri:mail-fill" },
-	mastodon: { icon: "ri:mastodon-fill" },
-	medium: { icon: "ri:medium-fill" },
-	messenger: { icon: "ri:messenger-fill" },
-	miniProgram: { icon: "ri:mini-program-fill" },
-	neteaseCloudMusic: { icon: "ri:netease-cloud-music-fill" },
-	notion: { icon: "ri:notion-fill" },
-	patreon: { icon: "ri:patreon-fill" },
-	paypal: { icon: "ri:paypal-fill" },
-	pinterest: { icon: "ri:pinterest-fill" },
-	playstation: { icon: "ri:playstation-fill" },
-	productHunt: { icon: "ri:product-hunt-fill" },
-	qq: { icon: "ri:qq-fill" },
-	reddit: { icon: "ri:reddit-fill" },
-	rss: { icon: "ri:rss-fill", label: "the RSS link" },
-	skype: { icon: "ri:skype-fill" },
-	slack: { icon: "ri:slack-fill" },
-	snapchat: { icon: "ri:snapchat-fill" },
-	soundcloud: { icon: "ri:soundcloud-fill" },
-	spotify: { icon: "ri:spotify-fill" },
-	stackOverflow: { icon: "ri:stack-overflow-fill" },
-	steam: { icon: "ri:steam-fill" },
-	switch: { icon: "ri:switch-fill" },
-	telegram: { icon: "ri:telegram-fill" },
-	threads: { icon: "ri:threads-fill" },
-	tiktok: { icon: "ri:tiktok-fill" },
-	trello: { icon: "ri:trello-fill" },
-	tumblr: { icon: "ri:tumblr-fill" },
-	twitch: { icon: "ri:twitch-fill" },
-	x: { icon: "ri:twitter-x-fill" },
-	wechat: { icon: "ri:wechat-fill" },
-	weibo: { icon: "ri:weibo-fill" },
-	whatsapp: { icon: "ri:whatsapp-fill" },
-	xbox: { icon: "ri:xbox-fill" },
-	youtube: { icon: "ri:youtube-fill" },
-	zhihu: { icon: "ri:zhihu-fill" },
+	bilibili: { icon: 'ri:bilibili-fill' },
+	dingding: { icon: 'ri:dingding-fill' },
+	discord: { icon: 'ri:discord-fill' },
+	douban: { icon: 'ri:douban-fill' },
+	dribbble: { icon: 'ri:dribbble-fill' },
+	facebook: { icon: 'ri:facebook-box-fill' },
+	flickr: { icon: 'ri:flickr-fill' },
+	github: { icon: 'ri:github-fill' },
+	gitlab: { icon: 'ri:gitlab-fill' },
+	google: { icon: 'ri:google-fill' },
+	instagram: { icon: 'ri:instagram-fill' },
+	kakaoTalk: { icon: 'ri:kakao-talk-fill' },
+	line: { icon: 'ri:line-fill' },
+	linkedin: { icon: 'ri:linkedin-box-fill' },
+	mail: { icon: 'ri:mail-fill' },
+	mastodon: { icon: 'ri:mastodon-fill' },
+	medium: { icon: 'ri:medium-fill' },
+	messenger: { icon: 'ri:messenger-fill' },
+	miniProgram: { icon: 'ri:mini-program-fill' },
+	neteaseCloudMusic: { icon: 'ri:netease-cloud-music-fill' },
+	notion: { icon: 'ri:notion-fill' },
+	patreon: { icon: 'ri:patreon-fill' },
+	paypal: { icon: 'ri:paypal-fill' },
+	pinterest: { icon: 'ri:pinterest-fill' },
+	playstation: { icon: 'ri:playstation-fill' },
+	productHunt: { icon: 'ri:product-hunt-fill' },
+	qq: { icon: 'ri:qq-fill' },
+	reddit: { icon: 'ri:reddit-fill' },
+	rss: { icon: 'ri:rss-fill', label: 'the RSS link' },
+	skype: { icon: 'ri:skype-fill' },
+	slack: { icon: 'ri:slack-fill' },
+	snapchat: { icon: 'ri:snapchat-fill' },
+	soundcloud: { icon: 'ri:soundcloud-fill' },
+	spotify: { icon: 'ri:spotify-fill' },
+	stackOverflow: { icon: 'ri:stack-overflow-fill' },
+	steam: { icon: 'ri:steam-fill' },
+	switch: { icon: 'ri:switch-fill' },
+	telegram: { icon: 'ri:telegram-fill' },
+	threads: { icon: 'ri:threads-fill' },
+	tiktok: { icon: 'ri:tiktok-fill' },
+	trello: { icon: 'ri:trello-fill' },
+	tumblr: { icon: 'ri:tumblr-fill' },
+	twitch: { icon: 'ri:twitch-fill' },
+	x: { icon: 'ri:twitter-x-fill' },
+	xiaohongshu: { icon: 'xiaohongshu', label: 'Xiaohongshu' },
+	wechat: { icon: 'ri:wechat-fill' },
+	weibo: { icon: 'ri:weibo-fill' },
+	whatsapp: { icon: 'ri:whatsapp-fill' },
+	xbox: { icon: 'ri:xbox-fill' },
+	youtube: { icon: 'ri:youtube-fill' },
+	zhihu: { icon: 'ri:zhihu-fill' },
 };
 
+const socialOrder = ['xiaohongshu', 'x', 'weibo', 'bilibili', 'telegram', 'mail', 'rss'];
+
 const socials: Record<string, string>[] = [];
-for (const platform in Socials) {
+for (const platform of socialOrder) {
 	if (Socials[platform].url && socialConfig[platform]) {
 		socials.push({
 			platform,
@@ -120,13 +123,11 @@ for (const platform in Socials) {
 				!Hide.includes("search") && (
 					<a
 						href="/search"
+						class="header-icon-link"
 						title="Navigate to search page"
 						aria-label="Navigate to search page"
 					>
-						<Icon
-							name="ri:search-2-line"
-							class="opacity-75 hover:opacity-100"
-						/>
+						<Icon name="ri:search-2-line" />
 					</a>
 				)
 			}
@@ -138,12 +139,8 @@ for (const platform in Socials) {
 				socials.length > 0 && (
 					<div class="mt-[2dvh] flex flex-wrap justify-center gap-3 lg:mt-0">
 						{socials.map(({ platform, icon, url, label }) => (
-							<a href={url} aria-label={label ?? platform}>
-								<Icon
-									name={icon}
-									class="fill-current opacity-75 hover:opacity-100"
-									title={label ?? platform}
-								/>
+							<a class="header-social-link" href={url} aria-label={label ?? platform}>
+								<Icon name={icon} class="fill-current" title={label ?? platform} />
 							</a>
 						))}
 					</div>
@@ -152,6 +149,49 @@ for (const platform in Socials) {
 		</Fragment>
 	</div>
 </header>
+
+<style>
+	.header-icon-link,
+	.header-social-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--radius-button);
+		border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-accent-soft));
+		background: color-mix(in srgb, var(--color-surface) 90%, var(--color-accent-soft) 10%);
+		color: var(--color-text);
+		text-decoration: none;
+		transition:
+			transform var(--motion-gentle),
+			border-color var(--motion-gentle),
+			background var(--motion-gentle),
+			color var(--motion-gentle),
+			opacity var(--motion-gentle);
+	}
+
+	.header-icon-link {
+		height: 2.15rem;
+		width: 2.15rem;
+		opacity: 0.88;
+	}
+
+	.header-social-link {
+		height: 2.05rem;
+		width: 2.05rem;
+		opacity: 0.82;
+	}
+
+	.header-icon-link:hover,
+	.header-icon-link:focus-visible,
+	.header-social-link:hover,
+	.header-social-link:focus-visible {
+		transform: translateY(-2px);
+		border-color: color-mix(in srgb, var(--color-accent) 54%, var(--color-border));
+		background: color-mix(in srgb, var(--color-surface) 84%, var(--color-accent-soft) 16%);
+		color: var(--color-accent);
+		opacity: 1;
+	}
+</style>
 
 <script>
 	const toggleMenu = (document: Document) => {

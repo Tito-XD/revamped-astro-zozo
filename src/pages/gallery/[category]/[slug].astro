@@ -1,51 +1,58 @@
 ---
+import { render } from 'astro:content';
 import ScaffoldLayout from '~/layouts/ScaffoldLayout.astro';
 import {
-	galleryItems,
 	getGalleryCategory,
+	getGalleryEntries,
+	getGalleryItem,
 	getGalleryItemsByCategory,
-} from '~/data/gallery';
+} from '~/utils/gallery';
 
-export const getStaticPaths = () =>
-	galleryItems.map((item) => ({
-		params: { category: item.category, slug: item.slug },
-		props: { categorySlug: item.category, slug: item.slug },
+export const getStaticPaths = async () => {
+	const items = await getGalleryEntries();
+	return items.map((item) => ({
+		params: { category: item.data.category, slug: item.data.slug },
+		props: { categorySlug: item.data.category, slug: item.data.slug },
 	}));
+};
 
 const { categorySlug, slug } = Astro.props;
 const category = getGalleryCategory(categorySlug);
-const items = getGalleryItemsByCategory(categorySlug);
-const itemIndex = items.findIndex((entry) => entry.slug === slug);
-const item = itemIndex >= 0 ? items[itemIndex] : undefined;
+const item = await getGalleryItem(categorySlug, slug);
+const categoryItems = await getGalleryItemsByCategory(categorySlug);
+const itemIndex = categoryItems.findIndex((entry) => entry.data.slug === slug);
 
 if (!category || !item) {
 	throw new Error(`Unknown gallery item: ${categorySlug}/${slug}`);
 }
 
-const previousItem = items[(itemIndex - 1 + items.length) % items.length];
-const nextItem = items[(itemIndex + 1) % items.length];
-const hasFocusCharacters = Boolean(item.focusCharacters?.length);
-const defaultFocus = item.focusCharacters?.[0];
-const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
+const previousItem =
+	categoryItems[(itemIndex - 1 + categoryItems.length) % categoryItems.length];
+const nextItem = categoryItems[(itemIndex + 1) % categoryItems.length];
+const hasFocusCharacters = Boolean(item.data.focusCharacters?.length);
+const defaultFocus = item.data.focusCharacters?.[0];
+const { Content } = await render(item);
+const hasStory = Boolean(item.body?.trim().length);
+const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(categoryItems.length).padStart(2, '0')}`;
 ---
 
 <ScaffoldLayout
-	title={`Gallery / ${item.title}`}
-	description={item.summary}
+	title={`Gallery / ${item.data.title}`}
+	description={item.data.summary}
 	currentNav={undefined}
 >
 	<section class="gallery-detail-heading">
 		<div>
 			<a class="gallery-back-link" href={`/gallery/${category.slug}/`}>{category.title}</a>
-			<p>{item.eyebrow}</p>
-			<h1>{item.title}</h1>
-			<span>{item.summary}</span>
+			<p>{item.data.eyebrow}</p>
+			<h1>{item.data.title}</h1>
+			<span>{item.data.summary}</span>
 		</div>
 		<div class="gallery-detail-meta">
 			<span>{positionLabel}</span>
-			{item.year && <span>{item.year}</span>}
-			{item.location && <span>{item.location}</span>}
-			{item.credit && <span>{item.credit}</span>}
+			{item.data.year && <span>{item.data.year}</span>}
+			{item.data.location && <span>{item.data.location}</span>}
+			{item.data.credit && <span>{item.data.credit}</span>}
 			{hasFocusCharacters && <span>Character Focus</span>}
 		</div>
 	</section>
@@ -54,8 +61,8 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		<div
 			class="gallery-stage-panel"
 			data-gallery-shortcuts
-			data-prev-href={`/gallery/${category.slug}/${previousItem.slug}/`}
-			data-next-href={`/gallery/${category.slug}/${nextItem.slug}/`}
+			data-prev-href={`/gallery/${category.slug}/${previousItem.data.slug}/`}
+			data-next-href={`/gallery/${category.slug}/${nextItem.data.slug}/`}
 			data-focus-scope={hasFocusCharacters ? '' : undefined}
 			data-selected-focus={defaultFocus?.id}
 		>
@@ -63,19 +70,19 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 				class:list={['gallery-stage-frame', { 'has-focus-map': hasFocusCharacters }]}
 			>
 				<img
-					src={item.image.src}
-					width={item.image.width}
-					height={item.image.height}
-					alt={item.alt}
+					src={item.data.image.src}
+					width={item.data.image.width}
+					height={item.data.image.height}
+					alt={item.data.alt}
 					loading="eager"
 					decoding="async"
 				/>
 
-				<a class="gallery-stage-arrow prev" href={`/gallery/${category.slug}/${previousItem.slug}/`}>
+				<a class="gallery-stage-arrow prev" href={`/gallery/${category.slug}/${previousItem.data.slug}/`}>
 					<span aria-hidden="true">&larr;</span>
 					<span class="sr-only">Previous image</span>
 				</a>
-				<a class="gallery-stage-arrow next" href={`/gallery/${category.slug}/${nextItem.slug}/`}>
+				<a class="gallery-stage-arrow next" href={`/gallery/${category.slug}/${nextItem.data.slug}/`}>
 					<span aria-hidden="true">&rarr;</span>
 					<span class="sr-only">Next image</span>
 				</a>
@@ -86,7 +93,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 							<div class="gallery-focus-highlight" data-focus-highlight></div>
 							<div class="gallery-focus-caption" data-focus-caption>{defaultFocus?.name}</div>
 							{
-								item.focusCharacters?.map((focus) => (
+								item.data.focusCharacters?.map((focus) => (
 									<button
 										type="button"
 										class="gallery-focus-target"
@@ -137,7 +144,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 
 						<section class="gallery-focus-roster" aria-label="Character roster">
 							{
-								item.focusCharacters?.map((focus) => (
+								item.data.focusCharacters?.map((focus) => (
 									<button
 										type="button"
 										class="gallery-focus-card"
@@ -179,20 +186,20 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 
 			<nav class="gallery-thumb-strip" aria-label="All images in this category">
 				{
-					items.map((entry) => (
+					categoryItems.map((entry) => (
 						<a
-							class:list={['gallery-thumb-card', { active: entry.slug === item.slug }]}
-							href={`/gallery/${category.slug}/${entry.slug}/`}
+							class:list={['gallery-thumb-card', { active: entry.data.slug === item.data.slug }]}
+							href={`/gallery/${category.slug}/${entry.data.slug}/`}
 						>
 							<img
-								src={entry.image.src}
-								width={entry.image.width}
-								height={entry.image.height}
-								alt={entry.alt}
+								src={entry.data.image.src}
+								width={entry.data.image.width}
+								height={entry.data.image.height}
+								alt={entry.data.alt}
 								loading="lazy"
 								decoding="async"
 							/>
-							<span>{entry.title}</span>
+							<span>{entry.data.title}</span>
 						</a>
 					))
 				}
@@ -202,15 +209,25 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		<aside class="gallery-notes-panel">
 			<div class="gallery-notes-card">
 				<p class="gallery-notes-eyebrow">Notes</p>
-				<h2>About this image</h2>
+				<h2>{item.data.notesTitle ?? 'About this image'}</h2>
 				{
-					item.notes.map((note) => (
+					item.data.notes.map((note) => (
 						<p>{note}</p>
 					))
 				}
 			</div>
 		</aside>
 	</section>
+	{
+		hasStory && (
+			<section class="gallery-story-panel">
+				<p class="gallery-notes-eyebrow">Story</p>
+				<article class="gallery-story-prose prose max-w-none dark:prose-invert">
+					<Content />
+				</article>
+			</section>
+		)
+	}
 </ScaffoldLayout>
 
 <style is:global>
@@ -248,7 +265,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 	}
 
 	.gallery-detail-meta span {
-		border-radius: 999px;
+		border-radius: var(--radius-chip);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 88%, var(--color-accent-soft));
 		padding: 0.5rem 0.85rem;
@@ -276,7 +293,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 	.gallery-stage-frame {
 		position: relative;
 		overflow: hidden;
-		border-radius: 1.6rem;
+		border-radius: var(--radius-card);
 		border: 1px solid var(--color-border);
 		background: radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent-soft) 44%, transparent), transparent 35%), linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 95%, var(--color-accent-soft) 5%), color-mix(in srgb, var(--color-surface-2) 88%, var(--color-surface) 12%));
 	}
@@ -297,7 +314,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		width: 2.75rem;
 		align-items: center;
 		justify-content: center;
-		border-radius: 999px;
+		border-radius: var(--radius-button);
 		border: 1px solid color-mix(in srgb, var(--color-surface) 18%, transparent);
 		background: color-mix(in srgb, var(--color-text) 72%, transparent);
 		color: var(--color-surface);
@@ -320,7 +337,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		top: var(--focus-y, 12%);
 		width: var(--focus-width, 18%);
 		height: var(--focus-height, 48%);
-		border-radius: 1.25rem;
+		border-radius: var(--radius-soft);
 		border: 2px solid var(--focus-accent, var(--color-accent));
 		box-shadow: 0 0 0 999rem color-mix(in srgb, var(--color-text) 22%, transparent), 0 0 30px color-mix(in srgb, var(--focus-accent, var(--color-accent)) 42%, transparent);
 		transition: left 220ms ease, top 220ms ease, width 220ms ease, height 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
@@ -332,7 +349,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		left: 1rem;
 		bottom: 1rem;
 		max-width: calc(100% - 2rem);
-		border-radius: 999px;
+		border-radius: var(--radius-chip);
 		background: color-mix(in srgb, var(--color-text) 78%, transparent);
 		padding: 0.55rem 0.9rem;
 		color: var(--color-surface);
@@ -364,7 +381,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
 		gap: 1rem;
 		align-items: center;
-		border-radius: 1.3rem;
+		border-radius: var(--radius-card);
 		border: 1px solid var(--color-border);
 		background: linear-gradient(135deg, color-mix(in srgb, var(--color-surface) 96%, var(--color-accent-soft) 4%), color-mix(in srgb, var(--color-surface-2) 88%, var(--color-surface) 12%));
 		padding: 1rem;
@@ -373,7 +390,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 	.gallery-focus-spotlight img {
 		aspect-ratio: 4 / 5;
 		width: 100%;
-		border-radius: 1rem;
+		border-radius: var(--radius-media);
 		object-fit: cover;
 		box-shadow: 0 1rem 2rem rgba(var(--color-shadow-rgb), 0.12);
 	}
@@ -416,13 +433,16 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		gap: 0.85rem;
 		align-items: center;
 		min-width: 0;
-		border-radius: 1.15rem;
+		border-radius: var(--radius-soft);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft));
 		padding: 0.8rem;
 		text-align: left;
 		color: inherit;
-		transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+		transition:
+			transform var(--motion-gentle),
+			border-color var(--motion-gentle),
+			box-shadow var(--motion-gentle);
 	}
 
 	.gallery-focus-card:hover,
@@ -433,7 +453,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 	.gallery-focus-card img {
 		aspect-ratio: 1;
 		width: 100%;
-		border-radius: 0.95rem;
+		border-radius: var(--radius-media);
 		object-fit: cover;
 	}
 
@@ -488,7 +508,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 	.gallery-thumb-card img {
 		aspect-ratio: 4 / 3;
 		width: 100%;
-		border-radius: 1rem;
+		border-radius: var(--radius-media);
 		border: 1px solid transparent;
 		object-fit: cover;
 	}
@@ -530,7 +550,7 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		gap: 0.6rem;
 		height: fit-content;
 		min-width: 0;
-		border-radius: 1.4rem;
+		border-radius: var(--radius-card);
 		border: 1px solid var(--color-border);
 		background: color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft));
 		padding: 1.15rem;
@@ -557,6 +577,34 @@ const positionLabel = `${String(itemIndex + 1).padStart(2, '0')} / ${String(item
 		line-height: 1.7;
 		color: color-mix(in srgb, var(--color-muted) 92%, var(--color-text));
 		overflow-wrap: anywhere;
+	}
+
+	.gallery-story-panel {
+		margin-top: 1rem;
+		display: grid;
+		gap: 0.9rem;
+		border-radius: var(--radius-card);
+		border: 1px solid var(--color-border);
+		background: color-mix(in srgb, var(--color-surface) 95%, var(--color-accent-soft) 5%);
+		padding: 1.15rem;
+	}
+
+	.gallery-story-prose {
+		--tw-prose-body: var(--color-text);
+		--tw-prose-headings: var(--color-text);
+		--tw-prose-links: var(--color-accent);
+		--tw-prose-bold: var(--color-text);
+		--tw-prose-bullets: var(--color-border);
+		--tw-prose-counters: var(--color-muted);
+		--tw-prose-hr: var(--color-border);
+		--tw-prose-invert-body: var(--color-text);
+		--tw-prose-invert-headings: var(--color-text);
+		--tw-prose-invert-links: var(--color-accent);
+		--tw-prose-invert-bold: var(--color-text);
+	}
+
+	.gallery-story-prose :where(p:first-child) {
+		margin-top: 0;
 	}
 
 	@media (min-width: 1100px) {
