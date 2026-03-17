@@ -2,9 +2,9 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/aeecbae6-3875-47c0-a923-9ef102e4928b/deploy-status)](https://app.netlify.com/projects/titocafe/deploys)
 
-Tito's Cafe is a personal blog and gallery built with [Astro](https://astro.build), [Tailwind CSS](https://tailwindcss.com/), and [Bun](https://bun.sh/).
+Tito's Cafe is a personal blog, friends page, and gallery built with [Astro](https://astro.build), [Tailwind CSS](https://tailwindcss.com/), and [Bun](https://bun.sh/).
 
-This project started from [astro-blog-zozo](https://github.com/ladit/astro-blog-zozo), which itself was inspired by [hugo-theme-zozo](https://github.com/varkai/hugo-theme-zozo). The current codebase has been substantially customized for Tito's Cafe, including layout rewrites, a revised theme system, custom gallery pages, a friends page, and ongoing content model changes.
+This project started from [astro-blog-zozo](https://github.com/ladit/astro-blog-zozo), which itself was inspired by [hugo-theme-zozo](https://github.com/varkai/hugo-theme-zozo). The current codebase has been extensively rewritten for Tito's Cafe with a custom visual system, revised layouts, a gallery content model, and site-specific interaction design.
 
 ## Thanks
 
@@ -26,15 +26,28 @@ Special thanks to the original authors and contributors whose work made this pro
 - Giscus comments
 - Netlify deployment
 
-## Project Notes
+## What Is Customized
 
-This repository is no longer a stock theme mirror. It includes custom work for Tito's Cafe such as:
+This repository is no longer a stock theme mirror. Current custom work includes:
 
-- a redesigned warm gray-blue light and dark theme
-- a rewritten scaffold layout and footer structure
-- a `/friends` page with adaptive friend cards
-- a `/gallery` route with category walls and image viewer flows
+- a warm gray-blue light and dark theme with a unified set of surface, border, and accent tokens
+- a rewritten scaffold layout, footer, and navigation interaction system
+- a homepage and about page with matching hero-style layouts
+- a `/friends` page with adaptive cards and expand-on-focus details
+- a `/gallery` route with category walls, viewer pages, notes support, and illustration focus demos
+- gallery content moved into `src/content/gallery/` so markdown, metadata, and notes live in a predictable structure
 - customized post routing, RSS, and content handling for the current site structure
+
+## Project Structure
+
+Important folders:
+
+- `src/content/posts/`: blog posts
+- `src/content/gallery/`: gallery entries grouped by category
+- `src/assets/attachments/`: post and gallery image assets
+- `src/pages/`: route files
+- `src/components/`: reusable UI parts
+- `src/layouts/`: site layouts and page shells
 
 ## Development
 
@@ -60,6 +73,13 @@ Build the site:
 
 ```bash
 bun run build
+```
+
+Optional commands:
+
+```bash
+bun run lint
+bun run format
 ```
 
 ## Deployment
