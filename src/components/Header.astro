@@ -1,6 +1,8 @@
 ---
+import fs from 'node:fs/promises';
 import { Icon } from 'astro-icon/components';
 import { Hide, SiteDescription, SiteTitle, Socials } from '~/config';
+import { socialConfig, socialOrder } from '~/data/socials';
 import Nav from './Nav.astro';
 import ThemeToggler from './ThemeToggler.astro';
 
@@ -9,65 +11,11 @@ interface Props {
 }
 const { currentNav } = Astro.props;
 
-const socialConfig: Record<string, Record<string, string>> = {
-	bilibili: { icon: 'ri:bilibili-fill' },
-	dingding: { icon: 'ri:dingding-fill' },
-	discord: { icon: 'ri:discord-fill' },
-	douban: { icon: 'ri:douban-fill' },
-	dribbble: { icon: 'ri:dribbble-fill' },
-	facebook: { icon: 'ri:facebook-box-fill' },
-	flickr: { icon: 'ri:flickr-fill' },
-	github: { icon: 'ri:github-fill' },
-	gitlab: { icon: 'ri:gitlab-fill' },
-	google: { icon: 'ri:google-fill' },
-	instagram: { icon: 'ri:instagram-fill' },
-	kakaoTalk: { icon: 'ri:kakao-talk-fill' },
-	line: { icon: 'ri:line-fill' },
-	linkedin: { icon: 'ri:linkedin-box-fill' },
-	mail: { icon: 'ri:mail-fill' },
-	mastodon: { icon: 'ri:mastodon-fill' },
-	medium: { icon: 'ri:medium-fill' },
-	messenger: { icon: 'ri:messenger-fill' },
-	miniProgram: { icon: 'ri:mini-program-fill' },
-	neteaseCloudMusic: { icon: 'ri:netease-cloud-music-fill' },
-	notion: { icon: 'ri:notion-fill' },
-	patreon: { icon: 'ri:patreon-fill' },
-	paypal: { icon: 'ri:paypal-fill' },
-	pinterest: { icon: 'ri:pinterest-fill' },
-	playstation: { icon: 'ri:playstation-fill' },
-	productHunt: { icon: 'ri:product-hunt-fill' },
-	qq: { icon: 'ri:qq-fill' },
-	reddit: { icon: 'ri:reddit-fill' },
-	rss: { icon: 'ri:rss-fill', label: 'the RSS link' },
-	skype: { icon: 'ri:skype-fill' },
-	slack: { icon: 'ri:slack-fill' },
-	snapchat: { icon: 'ri:snapchat-fill' },
-	soundcloud: { icon: 'ri:soundcloud-fill' },
-	spotify: { icon: 'ri:spotify-fill' },
-	stackOverflow: { icon: 'ri:stack-overflow-fill' },
-	steam: { icon: 'ri:steam-fill' },
-	switch: { icon: 'ri:switch-fill' },
-	telegram: { icon: 'ri:telegram-fill' },
-	threads: { icon: 'ri:threads-fill' },
-	tiktok: { icon: 'ri:tiktok-fill' },
-	trello: { icon: 'ri:trello-fill' },
-	tumblr: { icon: 'ri:tumblr-fill' },
-	twitch: { icon: 'ri:twitch-fill' },
-	x: { icon: 'ri:twitter-x-fill' },
-	xiaohongshu: { icon: 'xiaohongshu', label: 'Xiaohongshu' },
-	wechat: { icon: 'ri:wechat-fill' },
-	weibo: { icon: 'ri:weibo-fill' },
-	whatsapp: { icon: 'ri:whatsapp-fill' },
-	xbox: { icon: 'ri:xbox-fill' },
-	youtube: { icon: 'ri:youtube-fill' },
-	zhihu: { icon: 'ri:zhihu-fill' },
-};
-
-const socialOrder = ['xiaohongshu', 'x', 'weibo', 'bilibili', 'telegram', 'mail', 'rss'];
+const customLogo = (await fs.stat('./src/assets/logo.png')).isFile();
 
 const socials: Record<string, string>[] = [];
 for (const platform of socialOrder) {
-	if (Socials[platform]?.url && socialConfig[platform]) {
+	if (Socials[platform].url && socialConfig[platform]) {
 		socials.push({
 			platform,
 			...Socials[platform],
@@ -79,33 +27,36 @@ for (const platform of socialOrder) {
 
 <header class="relative grid grid-cols-2 items-start justify-between lg:flex">
 	{
-		!Hide.includes('logo') ? (
-			<a href="/" aria-label="go to index" class="site-logo-link">
-				<img src="/sample/brand-tile.svg" alt={SiteTitle} class="site-logo-mark" />
-				<span class="sr-only">{SiteTitle}</span>
+		!Hide.includes("logo") ? (
+		<a
+				transition:persist
+				href="/"
+				aria-label="go to index"
+				class={customLogo ? 'w-[20rem] h-[6rem]' : ' '}
+			>
+				{customLogo ? (
+
+					<Icon name="logo" title="go to index" class="w-[20rem] h-[6rem]"/>
+				) : (
+					SiteTitle
+				)}
 			</a>
 		) : (
 			<div />
 		)
 	}
 	<button
+		transition:persist
 		id="menu-btn"
-		class="ui-pressable justify-self-end p-2 text-[var(--color-text)] lg:hidden"
+		class="mobile-menu-trigger ui-pressable justify-self-end lg:hidden"
 		title="open menu"
 		aria-label="open menu"
 		aria-expanded="false"
 		aria-controls="mobile-drawer"
 	>
-		<Icon name="ri:menu-fill" class="size-8" />
+		<Icon name="ri:apps-2-line" class="mobile-menu-trigger__icon" />
 	</button>
 	<div id="mobile-drawer" class="mobile-drawer lg:hidden" data-state="closed" aria-hidden="true">
-		<button
-			id="mobile-drawer-overlay"
-			class="mobile-drawer__overlay"
-			type="button"
-			tabindex="-1"
-			aria-label="Close menu"
-		/>
 		<aside class="mobile-drawer__panel" aria-label="Mobile navigation">
 			<div class="mobile-drawer__header">
 				<span class="mobile-drawer__eyebrow">Menu</span>
@@ -123,7 +74,7 @@ for (const platform of socialOrder) {
 				<Nav currentNav={currentNav} compact />
 				<div class="mobile-menu-actions">
 					{
-						!Hide.includes('search') && (
+						!Hide.includes("search") && (
 							<a
 								href="/search"
 								class="header-icon-link ui-pressable"
@@ -134,9 +85,9 @@ for (const platform of socialOrder) {
 							</a>
 						)
 					}
-					{!Hide.includes('themeToggler') && <ThemeToggler />}
+					{!Hide.includes("themeToggler") && <ThemeToggler />}
 				</div>
-				{!Hide.includes('siteDescription') && <p class="mobile-menu-description">{SiteDescription}</p>}
+				{!Hide.includes("siteDescription") && <p class="mobile-menu-description">{SiteDescription}</p>}
 				{
 					socials.length > 0 && (
 						<div class="mobile-menu-socials">
@@ -151,11 +102,15 @@ for (const platform of socialOrder) {
 			</div>
 		</aside>
 	</div>
-	<div class="col-span-2 hidden flex-col gap-3 text-center lg:flex lg:items-end">
-		<div class="mb-[2dvh] flex flex-col items-center gap-3 lg:mb-7 lg:flex-row lg:gap-8">
+	<div
+		class="col-span-2 hidden flex-col gap-3 text-center lg:flex lg:items-end"
+	>
+		<div
+			class="mb-[2dvh] flex flex-col items-center gap-3 lg:mb-7 lg:flex-row lg:gap-8"
+		>
 			<Nav currentNav={currentNav} />
 			{
-				!Hide.includes('search') && (
+				!Hide.includes("search") && (
 					<a
 						href="/search"
 						class="header-icon-link ui-pressable"
@@ -166,10 +121,10 @@ for (const platform of socialOrder) {
 					</a>
 				)
 			}
-			{!Hide.includes('themeToggler') && <ThemeToggler />}
+			{!Hide.includes("themeToggler") && <ThemeToggler />}
 		</div>
-		<Fragment>
-			{!Hide.includes('siteDescription') && <div>{SiteDescription}</div>}
+		<Fragment transition:persist>
+			{!Hide.includes("siteDescription") && <div>{SiteDescription}</div>}
 			{
 				socials.length > 0 && (
 					<div class="mt-[2dvh] flex flex-wrap justify-center gap-3 lg:mt-0">
@@ -186,21 +141,6 @@ for (const platform of socialOrder) {
 </header>
 
 <style>
-	.site-logo-link {
-		display: inline-flex;
-		width: clamp(4.5rem, 18vw, 5.4rem);
-		align-items: center;
-	}
-
-	.site-logo-mark {
-		width: 100%;
-		height: auto;
-		border-radius: calc(var(--radius-card) - 0.15rem);
-		box-shadow:
-			0 0.8rem 1.6rem rgba(var(--color-shadow-rgb), 0.12),
-			inset 0 1px 0 color-mix(in srgb, white 50%, transparent);
-	}
-
 	.header-icon-link,
 	.header-social-link {
 		display: inline-flex;
@@ -240,34 +180,28 @@ for (const platform of socialOrder) {
 	}
 
 	.mobile-drawer {
-		position: fixed;
-		inset: 0;
-		z-index: 50;
+		position: absolute;
+		top: calc(100% + 0.75rem);
+		left: 50%;
+		z-index: 40;
+		width: min(21rem, calc(100vw - 2.5rem), calc(100% - 0.5rem));
 		pointer-events: none;
+		transform: translateX(-50%);
 	}
 
 	.mobile-drawer[data-state='open'] {
 		pointer-events: auto;
 	}
 
-	.mobile-drawer__overlay {
-		position: absolute;
-		inset: 0;
-		border: 0;
-		background: rgba(18, 20, 23, 0.32);
-		opacity: 0;
-		transition: opacity var(--motion-gentle);
-	}
-
 	.mobile-drawer__panel {
-		position: absolute;
-		top: 0;
-		right: 0;
 		display: grid;
+		grid-template-rows: auto minmax(0, 1fr);
 		gap: 0.9rem;
-		width: min(82vw, 22rem);
-		height: 100%;
+		width: 100%;
+		max-height: min(72dvh, calc(100dvh - 7rem));
 		padding: 1rem;
+		border-radius: 1.35rem;
+		border: 1px solid color-mix(in srgb, var(--color-border) 82%, var(--color-accent-soft));
 		background:
 			linear-gradient(
 				180deg,
@@ -275,18 +209,21 @@ for (const platform of socialOrder) {
 				color-mix(in srgb, var(--color-surface) 90%, var(--color-surface-2) 10%)
 			);
 		box-shadow:
-			-1rem 0 2rem rgba(var(--color-shadow-rgb), 0.12),
-			inset 1px 0 0 color-mix(in srgb, var(--color-border) 78%, transparent);
-		transform: translateX(100%);
-		transition: transform var(--motion-lift);
-	}
-
-	.mobile-drawer[data-state='open'] .mobile-drawer__overlay {
-		opacity: 1;
+			0 1.1rem 2.6rem rgba(var(--color-shadow-rgb), 0.16),
+			0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+		opacity: 0;
+		transform: translateY(-0.5rem) scale(0.98);
+		transform-origin: top center;
+		transition:
+			transform var(--motion-lift),
+			opacity var(--motion-gentle);
+		will-change: transform;
+		overflow: hidden;
 	}
 
 	.mobile-drawer[data-state='open'] .mobile-drawer__panel {
-		transform: translateX(0);
+		opacity: 1;
+		transform: translateY(0) scale(1);
 	}
 
 	.mobile-drawer__header {
@@ -294,6 +231,7 @@ for (const platform of socialOrder) {
 		align-items: center;
 		justify-content: space-between;
 		gap: 0.75rem;
+		padding-bottom: 0.15rem;
 	}
 
 	.mobile-drawer__eyebrow {
@@ -309,6 +247,10 @@ for (const platform of socialOrder) {
 		gap: 0.9rem;
 		align-content: start;
 		padding: 0.25rem 0 0;
+		min-height: 0;
+		overflow-y: auto;
+		padding-bottom: 0.35rem;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.mobile-menu-actions {
@@ -330,16 +272,54 @@ for (const platform of socialOrder) {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.65rem;
+		padding-bottom: 0.15rem;
+	}
+
+	.mobile-menu-trigger {
+		display: inline-flex;
+		height: 3rem;
+		width: 3rem;
+		align-items: center;
+		justify-content: center;
+		border-radius: 1rem;
+		border: 1px solid color-mix(in srgb, var(--color-border) 84%, var(--color-accent-soft));
+		background: color-mix(in srgb, var(--color-surface) 92%, var(--color-accent-soft) 8%);
+		color: var(--color-text);
+		box-shadow: 0 0.55rem 1.4rem rgba(var(--color-shadow-rgb), 0.08);
+		transition:
+			transform var(--motion-gentle),
+			border-color var(--motion-gentle),
+			background var(--motion-gentle),
+			box-shadow var(--motion-gentle),
+			color var(--motion-gentle);
+	}
+
+	.mobile-menu-trigger:hover,
+	.mobile-menu-trigger:focus-visible,
+	.mobile-menu-trigger[aria-expanded='true'] {
+		border-color: color-mix(in srgb, var(--color-accent) 48%, var(--color-border));
+		background: color-mix(in srgb, var(--color-surface) 86%, var(--color-accent-soft) 14%);
+		color: var(--color-accent);
+		box-shadow: 0 0.85rem 1.8rem rgba(var(--color-shadow-rgb), 0.14);
+	}
+
+	.mobile-menu-trigger__icon {
+		width: 1.4rem;
+		height: 1.4rem;
 	}
 
 	@media (max-width: 767px) {
-		#menu-btn {
-			padding: 0.65rem;
+		.mobile-drawer__panel {
+			max-height: min(76dvh, calc(100dvh - 6rem));
 		}
 
-		#menu-btn :global(svg) {
-			width: 1.9rem;
-			height: 1.9rem;
+		.mobile-drawer {
+			width: min(19.5rem, calc(100vw - 2rem), calc(100% - 0.25rem));
+		}
+
+		.mobile-menu-trigger {
+			height: 2.8rem;
+			width: 2.8rem;
 		}
 	}
 </style>
@@ -354,9 +334,8 @@ for (const platform of socialOrder) {
 		const root = document.documentElement;
 		const button = document.getElementById('menu-btn');
 		const drawer = document.getElementById('mobile-drawer');
-		const overlay = document.getElementById('mobile-drawer-overlay');
 		const closeButton = document.getElementById('mobile-drawer-close');
-		if (!button || !drawer || !overlay || !closeButton) {
+		if (!button || !drawer || !closeButton) {
 			return;
 		}
 
@@ -394,6 +373,17 @@ for (const platform of socialOrder) {
 			}
 		};
 
+		const handlePointerDown = (event: MouseEvent) => {
+			const target = event.target;
+			if (!(target instanceof Node)) {
+				return;
+			}
+			if (drawer.contains(target) || button.contains(target)) {
+				return;
+			}
+			closeDrawer();
+		};
+
 		const handleResize = () => {
 			if (window.matchMedia('(min-width: 1024px)').matches) {
 				closeDrawer();
@@ -401,18 +391,18 @@ for (const platform of socialOrder) {
 		};
 
 		button.addEventListener('click', toggleDrawer);
-		overlay.addEventListener('click', closeDrawer);
 		closeButton.addEventListener('click', closeDrawer);
 		drawer.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeDrawer));
+		document.addEventListener('mousedown', handlePointerDown);
 		document.addEventListener('keydown', handleKeydown);
 		window.addEventListener('resize', handleResize);
 
 		windowWithCleanup.__revampedMenuCleanup = () => {
 			closeDrawer();
 			button.removeEventListener('click', toggleDrawer);
-			overlay.removeEventListener('click', closeDrawer);
 			closeButton.removeEventListener('click', closeDrawer);
 			drawer.querySelectorAll('a').forEach((link) => link.removeEventListener('click', closeDrawer));
+			document.removeEventListener('mousedown', handlePointerDown);
 			document.removeEventListener('keydown', handleKeydown);
 			window.removeEventListener('resize', handleResize);
 		};
