@@ -38,6 +38,6 @@ Repeated or severe violations may result in temporary or permanent restrictions 
 
 If you experience or witness unacceptable behavior, please contact the maintainer at:
 
-- `maintainer@example.com`
+- `titow.xd@outlook.com`
 
 All reports will be reviewed and handled as carefully and respectfully as possible.
