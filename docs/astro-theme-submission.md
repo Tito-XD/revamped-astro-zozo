@@ -13,7 +13,7 @@ Use this document when filling out the [Astro Developer Portal](https://astro.bu
 
 ## Short description
 
-A warm, editorial Astro 6 blog theme with gallery, friends page, Pagefind search, and light/dark mode — built for writers and creatives who want more than a minimal blog.
+A warm Astro 6 blog theme with gallery, friends, search, and dark mode.
 
 ## Tools used
 

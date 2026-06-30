@@ -24,7 +24,7 @@ export const Site = 'https://revamped-astrozozo.netlify.app';
 export const SiteLanguage = 'en';
 export const SiteTitle = 'Revamped Astro Zozo';
 export const SiteDescription =
-	'A warm, editorial Astro 6 blog theme with gallery, friends page, Pagefind search, and light/dark mode — built for writers and creatives who want more than a minimal blog.';
+	'A warm Astro 6 blog theme with gallery, friends, search, and dark mode.';
 export const FooterDescription = 'A refreshed Astro theme starter.';
 export const AdminName = 'Template Author';
 export const PageSize = 12;

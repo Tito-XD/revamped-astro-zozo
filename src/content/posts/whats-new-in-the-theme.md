@@ -10,7 +10,7 @@ tags:
   - theme
 ---
 
-Revamped Astro Zozo is a warm, editorial Astro 6 blog theme with gallery, friends page, Pagefind search, and light/dark mode — built for writers and creatives who want more than a minimal blog.
+Revamped Astro Zozo is a warm Astro 6 blog theme with gallery, friends, search, and dark mode.
 
 This sample branch shows how far the original Astro Zozo theme can be pushed without losing its simplicity. The most visible differences are the warmer palette, more intentional button states, a refined footer, and homepage and about layouts that behave more like editorial landing pages.
 

@@ -1,7 +1,7 @@
 ---
 title: Template Overview
 slug: template-overview
-description: A warm, editorial Astro 6 blog theme with gallery, friends page, Pagefind search, and light/dark mode.
+description: A warm Astro 6 blog theme with gallery, friends, search, and dark mode.
 date: 2026-03-17 10:00:00
 lastmod: 2026-06-30 10:00:00
 tags:
