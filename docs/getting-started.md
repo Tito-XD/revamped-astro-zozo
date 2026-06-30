@@ -32,8 +32,8 @@ Start with these files:
 
 - `src/config.ts`
 - `public/sample/logo.svg`
-- `public/sample/home-hero.svg`
-- `public/sample/about-hero.svg`
+- `public/sample/home-hero.jpg`
+- `public/sample/about-hero.jpg`
 - `public/site.webmanifest`
 
 Recommended replacements:

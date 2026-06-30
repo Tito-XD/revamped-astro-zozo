@@ -4,9 +4,10 @@ slug: weekend-shelf
 category: life
 eyebrow: Life / Snapshot
 summary: Another sample entry for documenting a small everyday scene with a short note beside it.
-alt: Sample life gallery image with rounded shapes and a shelf-like layout.
-image: ../../../assets/sample/gallery/life-02.svg
+alt: Cozy interior corner with plants and shelves.
+image: ../../../assets/sample/gallery/life-02.jpg
 sortOrder: 20
+credit: Photo by Spacejoy on Unsplash
 year: '2026'
 location: Home Corner
 notes:
